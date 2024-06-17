@@ -18,4 +18,6 @@ public class Vote {
     private Voter voter;
     @ManyToOne
     private Election election;
+    @OneToOne
+    private Candidate candidate;
 }
