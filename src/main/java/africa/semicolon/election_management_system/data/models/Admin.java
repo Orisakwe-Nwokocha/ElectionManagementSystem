@@ -21,7 +21,7 @@ import static lombok.AccessLevel.NONE;
 @Setter
 public class Admin {
     @Id
-    @GeneratedValue(strategy =  IDENTITY)
+    @GeneratedValue(strategy =IDENTITY)
     private Long id;
     private String address;
     private String username;
