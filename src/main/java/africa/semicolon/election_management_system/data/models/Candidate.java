@@ -26,6 +26,7 @@ public class Candidate {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
+    @Column(unique = true)
     private String identificationNumber;
     private String password;
     private String address;
