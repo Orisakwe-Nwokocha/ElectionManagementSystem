@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static java.time.LocalDateTime.now;
+import static lombok.AccessLevel.NONE;
 
 @Entity
 @Table(name = "candidates")
@@ -24,24 +26,37 @@ public class Candidate {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
+    private String identificationNumber;
     private String password;
     private String address;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDate dob;
     private String stateOfOrigin;
     private String partyAffiliation;
     private Category positionContested;
-    private String identificationNumber;
+
     private Integer votingId;
     private Role role;
     @ManyToOne
     private Election election;
+
+    @Setter(NONE)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateRegistered;
+
+    @Setter(NONE)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
+
+    @PrePersist
+    private void setDateRegistered() {
+        dateRegistered = now();
+    }
+
+    @PreUpdate
+    private void setDateUpdated() {
+        dateUpdated = now();
+    }
 
 }
