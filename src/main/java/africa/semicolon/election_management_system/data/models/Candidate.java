@@ -14,4 +14,8 @@ public class Candidate {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+    private String name;
+    private String password;
+    private String Address;
+
 }
