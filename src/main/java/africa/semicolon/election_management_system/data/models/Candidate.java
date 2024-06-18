@@ -14,6 +14,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static java.time.LocalDateTime.now;
 
 @Entity
 @Table(name = "candidates")
@@ -43,5 +44,14 @@ public class Candidate {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
+    @PrePersist
+    private void setDateRegistered() {
+        dateRegistered = now();
+    }
+
+    @PreUpdate
+    private void setDateUpdated() {
+        dateUpdated = now();
+    }
 
 }
