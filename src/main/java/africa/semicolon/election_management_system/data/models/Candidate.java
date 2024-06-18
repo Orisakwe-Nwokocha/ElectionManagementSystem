@@ -2,6 +2,10 @@ package africa.semicolon.election_management_system.data.models;
 
 import africa.semicolon.election_management_system.data.constants.Category;
 import africa.semicolon.election_management_system.data.constants.Role;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +26,8 @@ public class Candidate {
     private String name;
     private String password;
     private String address;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDate dob;
     private String stateOfOrigin;
     private String partyAffiliation;
@@ -31,7 +37,11 @@ public class Candidate {
     private Role role;
     @ManyToOne
     private Election election;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateRegistered;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
 
 }
