@@ -28,6 +28,12 @@ class AdminServiceImplTest {
         assertNotNull (adminResponse);
         assertTrue(adminResponse.getMessage().contains("successfully"));
     }
+
+    @Test
+    void testAdminCanNotRegisterTwice(){
+
+
+    }
     @Test
     void schedule() {
     }
