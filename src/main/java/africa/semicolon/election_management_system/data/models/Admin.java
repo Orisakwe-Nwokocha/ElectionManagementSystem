@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.time.LocalDateTime.now;
 import static lombok.AccessLevel.NONE;
@@ -26,6 +27,7 @@ public class Admin {
     private String address;
     private String username;
     private String password;
+    @Enumerated(value = STRING)
     private Role role;
 
     @Setter(NONE)
