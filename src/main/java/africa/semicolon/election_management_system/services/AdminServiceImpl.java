@@ -41,10 +41,6 @@ public class AdminServiceImpl implements AdminService {
         if (username == null || username.isEmpty()) {
             throw new ElectionManagementSystemBaseException("Username cannot be null or empty");
         }
-        String existingUser = username.toLowerCase();
-        if (adminRepository.existsByUsername(existingUser)) {
-            throw new ElectionManagementSystemBaseException(existingUser + " already exists");
-        }
     }
 
 
