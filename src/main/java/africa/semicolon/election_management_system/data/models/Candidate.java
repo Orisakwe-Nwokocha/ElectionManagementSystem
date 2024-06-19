@@ -13,6 +13,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.time.LocalDateTime.now;
 import static lombok.AccessLevel.NONE;
@@ -33,9 +34,11 @@ public class Candidate {
     private LocalDate dob;
     private String stateOfOrigin;
     private String partyAffiliation;
+    @Enumerated(STRING)
     private Category positionContested;
 
     private Integer votingId;
+    @Enumerated(value = STRING)
     private Role role;
     @ManyToOne
     private Election election;
