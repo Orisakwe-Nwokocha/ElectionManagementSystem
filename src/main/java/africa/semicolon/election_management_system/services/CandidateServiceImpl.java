@@ -5,21 +5,18 @@ import africa.semicolon.election_management_system.data.repositories.CandidateRe
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
 import africa.semicolon.election_management_system.dtos.response.RegisterCandidateResponse;
 import africa.semicolon.election_management_system.exceptions.CandidateNotFoundException;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CandidateServiceImplementation implements CandidateService{
+public class CandidateServiceImpl implements CandidateService{
     @Autowired
    private CandidateRepository candidateRepository;
 
    private  final ModelMapper modelMapper;
 
-    public CandidateServiceImplementation(ModelMapper modelMapper){
+    public CandidateServiceImpl(ModelMapper modelMapper){
         this.modelMapper = modelMapper;
 
     }
@@ -33,6 +30,7 @@ public class CandidateServiceImplementation implements CandidateService{
         return response;
     }
 
+    @Override
     public Candidate findCandidateBy(Long candidate){
         return candidateRepository.findById(candidate)
                 .orElseThrow(()-> new CandidateNotFoundException("Candidate not found"));

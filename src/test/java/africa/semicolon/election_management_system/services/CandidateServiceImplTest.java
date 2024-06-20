@@ -6,15 +6,13 @@ import africa.semicolon.election_management_system.dtos.response.RegisterCandida
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static africa.semicolon.election_management_system.data.constants.Category.NATIONAL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest
-class CandidateServiceImplementationTest {
+class CandidateServiceImplTest {
     @Autowired
     private CandidateService candidateService;
     @Autowired
