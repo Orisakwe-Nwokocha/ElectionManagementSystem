@@ -12,8 +12,9 @@ public class RegisterCandidateRequest {
     private String identificationNumber;
     private String password;
     private String address;
-    private LocalDate dob;
+    private LocalDate dateOfBirth;
     private String stateOfOrigin;
     private String partyAffiliation;
     private Category positionContested;
+    private Long electionId;
 }
