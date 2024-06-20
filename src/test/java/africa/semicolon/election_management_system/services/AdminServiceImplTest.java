@@ -74,10 +74,6 @@ class AdminServiceImplTest {
         request.setTitle("LGA Election 3");
         request.setStartDate(LocalDateTime.of(2024, SEPTEMBER,19,12,0));
         request.setEndDate(LocalDateTime.of(2024, SEPTEMBER,21,12,0));
-        request.setCategory(Category.NATIONAL);
+        request.setCategory(Category.LGA);
         ScheduleElectionResponse scheduleResponse = adminService.schedule(request);
         assertNotNull(scheduleResponse);
-
-    }
-
-}
