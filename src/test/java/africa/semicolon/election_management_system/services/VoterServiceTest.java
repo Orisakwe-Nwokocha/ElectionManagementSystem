@@ -64,7 +64,7 @@ public class VoterServiceTest {
     }
 
     private static void buildCastVoteRequest(CastVoteRequest castVoteRequest) {
-        castVoteRequest.setVotingId(100L);
+        castVoteRequest.setVotingId(654321L);
         castVoteRequest.setCandidateId(1L);
         castVoteRequest.setElectionId(1L);
     }
