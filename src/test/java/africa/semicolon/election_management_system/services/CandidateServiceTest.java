@@ -2,6 +2,7 @@ package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
 import africa.semicolon.election_management_system.dtos.responses.RegisterCandidateResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,12 +22,18 @@ class CandidateServiceTest {
 
 
     @Test
-    public void registerCandidate() {
+    public void registerCandidateTest() {
         RegisterCandidateRequest request = buildRequest();
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
         System.out.println(response);
         assertThat(response).isNotNull();
         assertThat(response.getMessage()).contains("success");
+    }
+
+    @Test
+    @DisplayName("test that candidate cannot register outside a scheduled election")
+    public void registerCandidateTest2() {
+
     }
 
     private static RegisterCandidateRequest buildRequest() {
