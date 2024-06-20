@@ -1,4 +1,4 @@
-package africa.semicolon.election_management_system.dtos.response;
+package africa.semicolon.election_management_system.dtos.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
