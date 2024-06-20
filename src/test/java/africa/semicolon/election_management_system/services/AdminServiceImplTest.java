@@ -17,7 +17,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 
-import static java.time.Month.JUNE;
 import static java.time.Month.SEPTEMBER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -38,20 +37,20 @@ class AdminServiceImplTest {
         RegisterAdminRequest adminRequest = new RegisterAdminRequest();
         adminRequest.setUsername("admin@test");
         adminRequest.setPassword("password");
-        RegisterAdminResponse adminResponse =  adminService.register(adminRequest);
-        assertNotNull (adminResponse);
+        RegisterAdminResponse adminResponse = adminService.register(adminRequest);
+        assertNotNull(adminResponse);
         assertTrue(adminResponse.getMessage().contains("successfully"));
     }
 
     @Test
-    void testAdminCanNotRegisterWithAnEmptyUsername(){
+    void testAdminCanNotRegisterWithAnEmptyUsername() {
         RegisterAdminRequest adminRequest = new RegisterAdminRequest();
         adminRequest.setUsername("");
         adminRequest.setPassword("");
         assertThat(adminRepository.count(), is(1L));
-        try{
+        try {
             adminService.register(adminRequest);
-        } catch (ElectionManagementSystemBaseException message){
+        } catch (ElectionManagementSystemBaseException message) {
             assertEquals("Username cannot be null or empty", message.getMessage());
         }
     }
@@ -65,15 +64,17 @@ class AdminServiceImplTest {
         RegisterAdminRequest request = new RegisterAdminRequest();
         request.setUsername("username");
         request.setPassword("password");
-        assertThrows(UsernameExistsException.class, ()-> adminService.register(request));
+        assertThrows(UsernameExistsException.class, () -> adminService.register(request));
     }
 
     @Test
-    public void scheduleElection_ElectionCanBeScheduledTest(){
+    public void scheduleElection_ElectionCanBeScheduledTest() {
         ScheduleElectionRequest request = new ScheduleElectionRequest();
         request.setTitle("LGA Election 3");
-        request.setStartDate(LocalDateTime.of(2024, SEPTEMBER,19,12,0));
-        request.setEndDate(LocalDateTime.of(2024, SEPTEMBER,21,12,0));
+        request.setStartDate(LocalDateTime.of(2024, SEPTEMBER, 19, 12, 0));
+        request.setEndDate(LocalDateTime.of(2024, SEPTEMBER, 21, 12, 0));
         request.setCategory(Category.LGA);
         ScheduleElectionResponse scheduleResponse = adminService.schedule(request);
         assertNotNull(scheduleResponse);
+    }
+}

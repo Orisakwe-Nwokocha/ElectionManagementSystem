@@ -10,13 +10,11 @@ import africa.semicolon.election_management_system.dtos.responses.RegisterAdminR
 import africa.semicolon.election_management_system.dtos.responses.ScheduleElectionResponse;
 import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
-
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import static java.time.LocalDateTime.now;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -25,7 +23,6 @@ public class AdminServiceImpl implements AdminService {
     private final ElectionRepository electionRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
     public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, ModelMapper modelMapper) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
@@ -44,16 +41,16 @@ public class AdminServiceImpl implements AdminService {
         return adminResponse;
     }
 
-
     @Override
     public ScheduleElectionResponse schedule(ScheduleElectionRequest request) {
         Election election = modelMapper.map(request, Election.class);
         election = electionRepository.save(election);
         var electionResponse = modelMapper.map(election, ScheduleElectionResponse.class);
-        electionResponse.setTimeCreated(LocalDateTime.now());
+        electionResponse.setTimeCreated(now());
         electionResponse.setMessage("Election scheduled successfully");
         return electionResponse;
     }
+
     @Override
     public Admin getAdminBy(Long id) {
         return adminRepository.findById(id)
@@ -67,4 +64,5 @@ public class AdminServiceImpl implements AdminService {
         boolean usernameExists = adminRepository.existsByUsername(username.toLowerCase());
         if (usernameExists) throw new UsernameExistsException("Username already taken");
     }
+
 }

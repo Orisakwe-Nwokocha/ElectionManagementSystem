@@ -1,11 +1,10 @@
 package africa.semicolon.election_management_system.dtos.responses;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@RequiredArgsConstructor
+@Getter
+@Setter
 public class RegisterAdminResponse {
     private Long id;
     private String username;

@@ -1,10 +1,11 @@
 package africa.semicolon.election_management_system.dtos.requests;
 
 
-import africa.semicolon.election_management_system.data.constants.Role;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class RegisterAdminRequest {
     private String username;
     private String password;
