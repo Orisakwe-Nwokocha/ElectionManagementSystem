@@ -2,9 +2,9 @@ package africa.semicolon.election_management_system.controllers;
 
 
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
+import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
 import africa.semicolon.election_management_system.services.AdminService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,5 +27,11 @@ public class AdminController {
     public ResponseEntity<?> registerAdmin(@ModelAttribute RegisterAdminRequest registerAdminRequest) throws IOException {
         return ResponseEntity.status(CREATED)
                 .body(adminService.register(registerAdminRequest));
+    }
+
+    @PostMapping("/scheduleElection")
+    public ResponseEntity<?> scheduleElection(@ModelAttribute ScheduleElectionRequest scheduleElectionRequest) throws IOException {
+        return ResponseEntity.status(CREATED)
+                .body(adminService.schedule(scheduleElectionRequest));
     }
 }
