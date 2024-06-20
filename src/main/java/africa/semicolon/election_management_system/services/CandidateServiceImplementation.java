@@ -16,8 +16,13 @@ import org.springframework.stereotype.Service;
 public class CandidateServiceImplementation implements CandidateService{
     @Autowired
    private CandidateRepository candidateRepository;
-    @Autowired
-   private  ModelMapper modelMapper;
+
+   private  final ModelMapper modelMapper;
+
+    public CandidateServiceImplementation(ModelMapper modelMapper){
+        this.modelMapper = modelMapper;
+
+    }
 
    @Override
     public RegisterCandidateResponse registerCandidate(RegisterCandidateRequest request){
@@ -27,7 +32,6 @@ public class CandidateServiceImplementation implements CandidateService{
         response.setMessage("Registration successful");
         return response;
     }
-
 
     public Candidate findCandidateBy(Long candidate){
         return candidateRepository.findById(candidate)

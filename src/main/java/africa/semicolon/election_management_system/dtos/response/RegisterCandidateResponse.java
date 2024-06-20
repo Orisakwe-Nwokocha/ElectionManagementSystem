@@ -25,7 +25,6 @@ public class RegisterCandidateResponse {
     private Category positionContested;
     @JsonProperty("voter_id")
     private Integer votingId;
-    private Role role;
     @JsonFormat(pattern = "dd/MMM/yyyy 'at' hh:mm a")
     private LocalDateTime dateRegistered;
     private String message;

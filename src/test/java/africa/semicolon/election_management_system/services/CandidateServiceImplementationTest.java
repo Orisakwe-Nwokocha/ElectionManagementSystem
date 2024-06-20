@@ -7,12 +7,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static africa.semicolon.election_management_system.data.constants.Category.NATIONAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-@SpringBootApplication
+@SpringBootTest
 class CandidateServiceImplementationTest {
     @Autowired
     private CandidateService candidateService;
@@ -28,9 +29,10 @@ class CandidateServiceImplementationTest {
         request.setPartyAffiliation("P.D.P");
         request.setPositionContested(NATIONAL);
         request.setStateOfOrigin("Benue");
-        request.setIdentificationNumber("12-3434-87443");
+        request.setIdentificationNumber("12343487443");
         request.setVotingId(2);
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
+        System.out.println(response);
         assertThat(candidateRepository.findAll().size()).isEqualTo(1);
         Assertions.assertThat(response).isNotNull();
     }
