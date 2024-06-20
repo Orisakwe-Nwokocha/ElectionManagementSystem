@@ -65,7 +65,4 @@ public class Voter {
         this.dateUpdated = now();
     }
 
-
-
-
 }

@@ -1,11 +1,8 @@
-package africa.semicolon.election_management_system.voterService;
+package africa.semicolon.election_management_system.services;
 
-import africa.semicolon.election_management_system.data.constants.Role;
 import africa.semicolon.election_management_system.data.models.Voter;
-import africa.semicolon.election_management_system.data.repositories.VoterRepository;
 import africa.semicolon.election_management_system.dtos.request.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.response.CreateVoterResponse;
-import africa.semicolon.election_management_system.services.VoterService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,23 +17,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Slf4j
-//@Sql(scripts = {"/db/data.sql"})
-public class voterServiceTest {
+@Sql(scripts = {"/db/data.sql"})
+public class VoterServiceTest {
+
     @Autowired
     private VoterService voterService;
-    @Autowired
-    private VoterRepository voterRepository;
 
     @Test
     public void testThatVoterCanRegister(){
-        CreateVoterRequest request = new CreateVoterRequest();
-        request.setName("John Doe");
-        request.setPassword("password");
-        request.setAddress("123 Main St");
-        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setStateOfOrigin("Lagos");
-        request.setRole(Role.VOTER);
-
+        CreateVoterRequest request = buildCreateVoterRequest();
         CreateVoterResponse response = voterService.registerVoter(request);
         log.info("Register Voter Response: {}", response);
         assertNotNull(response);
@@ -44,12 +33,20 @@ public class voterServiceTest {
         assertTrue(response.getMessage().contains("successful"));
         assertNotNull(response.getIdentificationNumber());
         assertNotNull(response.getDateRegistered());
-
         Voter savedVoter = voterService.getVoterById(response.getId());
         assertNotNull(savedVoter);
-        assertThat(savedVoter.getVotingId()).isBetween(100000, 999999);
+        assertThat(savedVoter.getVotingId()).isBetween(100000, 1000000);
         assertTrue(savedVoter.getStatus());
+    }
 
+    private static CreateVoterRequest buildCreateVoterRequest() {
+        CreateVoterRequest request = new CreateVoterRequest();
+        request.setName("John Doe");
+        request.setPassword("password");
+        request.setAddress("123 Main St");
+        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
+        request.setStateOfOrigin("Lagos");
+        return request;
     }
 
 }

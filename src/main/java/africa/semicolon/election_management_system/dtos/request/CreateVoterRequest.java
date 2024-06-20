@@ -1,6 +1,5 @@
 package africa.semicolon.election_management_system.dtos.request;
 
-import africa.semicolon.election_management_system.data.constants.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +12,4 @@ public class CreateVoterRequest {
     private String address;
     private LocalDate dateOfBirth;
     private String stateOfOrigin;
-    private Role role;
 }
