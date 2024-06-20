@@ -12,4 +12,5 @@ public class ScheduleElectionResponse {
     private LocalDateTime timeCreated;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private String message;
 }

@@ -1,9 +1,12 @@
 package africa.semicolon.election_management_system.services;
 
+import africa.semicolon.election_management_system.data.constants.Category;
 import africa.semicolon.election_management_system.data.models.Admin;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
+import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
+import africa.semicolon.election_management_system.dtos.responses.ScheduleElectionResponse;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDateTime;
+
+import static java.time.Month.JUNE;
+import static java.time.Month.SEPTEMBER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -62,6 +69,15 @@ class AdminServiceImplTest {
     }
 
     @Test
-    void schedule() {
+    public void scheduleElection_ElectionCanBeScheduledTest(){
+        ScheduleElectionRequest request = new ScheduleElectionRequest();
+        request.setTitle("LGA Election 3");
+        request.setStartDate(LocalDateTime.of(2024, SEPTEMBER,19,12,0));
+        request.setEndDate(LocalDateTime.of(2024, SEPTEMBER,21,12,0));
+        request.setCategory(Category.NATIONAL);
+        ScheduleElectionResponse scheduleResponse = adminService.schedule(request);
+        assertNotNull(scheduleResponse);
+
     }
+
 }

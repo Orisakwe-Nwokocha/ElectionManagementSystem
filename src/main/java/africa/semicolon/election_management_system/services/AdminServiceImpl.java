@@ -51,6 +51,7 @@ public class AdminServiceImpl implements AdminService {
         election = electionRepository.save(election);
         var electionResponse = modelMapper.map(election, ScheduleElectionResponse.class);
         electionResponse.setTimeCreated(LocalDateTime.now());
+        electionResponse.setMessage("Election scheduled successfully");
         return electionResponse;
     }
     @Override
