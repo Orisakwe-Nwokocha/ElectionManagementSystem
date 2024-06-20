@@ -41,6 +41,7 @@ public class Candidate {
     @Enumerated(value = STRING)
     private Role role;
     @ManyToOne
+    @JoinColumn(name = "election_id")
     private Election election;
 
     @Setter(NONE)

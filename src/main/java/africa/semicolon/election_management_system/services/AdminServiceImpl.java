@@ -41,6 +41,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ScheduleElectionResponse schedule(ScheduleElectionRequest request) {
+
         return null;
     }
 
