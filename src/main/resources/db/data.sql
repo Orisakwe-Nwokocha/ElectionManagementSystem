@@ -1,5 +1,6 @@
 TRUNCATE TABLE voters CASCADE;
 TRUNCATE TABLE admin CASCADE;
+TRUNCATE TABLE candidates CASCADE;
 
 INSERT INTO voters(id, name, identification_number, password, address, date_of_birth,
                     state_of_origin, status, voting_id, role, date_registered) VALUES

@@ -1,26 +1,20 @@
-package africa.semicolon.election_management_system.dtos.response;
+package africa.semicolon.election_management_system.dtos.responses;
 
 import africa.semicolon.election_management_system.data.constants.Category;
-import africa.semicolon.election_management_system.data.constants.Role;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 public class RegisterCandidateResponse {
+    @JsonProperty("candidate_id")
     private Long id;
-    private String name;
-    private String identificationNumber;
-    private String address;
-    @JsonFormat(pattern = "dd/MMM/yyyy 'at' hh:mm a")
-    private LocalDateTime dob;
-    private String stateOfOrigin;
     private String partyAffiliation;
     private Category positionContested;
     @JsonProperty("voter_id")
