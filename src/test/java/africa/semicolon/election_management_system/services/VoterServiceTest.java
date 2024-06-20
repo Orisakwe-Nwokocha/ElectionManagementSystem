@@ -1,8 +1,8 @@
 package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Voter;
-import africa.semicolon.election_management_system.dtos.request.CreateVoterRequest;
-import africa.semicolon.election_management_system.dtos.response.CreateVoterResponse;
+import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
+import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,7 @@ public class VoterServiceTest {
         request.setName("John Doe");
         request.setPassword("password");
         request.setAddress("123 Main St");
+        request.setIdentificationNumber("34567891");
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
         request.setStateOfOrigin("Lagos");
         return request;

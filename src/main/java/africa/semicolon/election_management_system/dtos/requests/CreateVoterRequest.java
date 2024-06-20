@@ -1,4 +1,4 @@
-package africa.semicolon.election_management_system.dtos.request;
+package africa.semicolon.election_management_system.dtos.requests;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,4 +12,5 @@ public class CreateVoterRequest {
     private String address;
     private LocalDate dateOfBirth;
     private String stateOfOrigin;
+    private String identificationNumber;
 }
