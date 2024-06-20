@@ -6,8 +6,10 @@ import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRe
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
 import africa.semicolon.election_management_system.dtos.responses.ScheduleElectionResponse;
+import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 
+import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,11 @@ public class AdminServiceImpl implements AdminService {
         this.modelMapper = modelMapper;
     }
 
-
     @Override
     public RegisterAdminResponse register(RegisterAdminRequest request) {
-        String username = request.getUsername().toLowerCase();
+        String username = request.getUsername();
         validate(username);
-        request.setUsername(username);
+        request.setUsername(username.toLowerCase());
         Admin admin = modelMapper.map(request, Admin.class);
         admin = adminRepository.save(admin);
         var adminResponse = modelMapper.map(admin, RegisterAdminResponse.class);
@@ -45,14 +46,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin getAdminBy(Long id) {
-        return null;
+        return adminRepository.findById(id)
+                .orElseThrow(()-> new AdminNotFoundException("Admin not found"));
     }
-
 
     private void validate(String username) {
         if (username == null || username.isEmpty()) {
             throw new ElectionManagementSystemBaseException("Username cannot be null or empty");
         }
-
+        boolean usernameExists = adminRepository.existsByUsername(username.toLowerCase());
+        if (usernameExists) throw new UsernameExistsException("Username already taken");
     }
 }
