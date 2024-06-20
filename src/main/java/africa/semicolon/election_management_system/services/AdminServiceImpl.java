@@ -1,7 +1,9 @@
 package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Admin;
+import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
+import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
@@ -14,15 +16,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
+    private final ElectionRepository electionRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public AdminServiceImpl(AdminRepository adminRepository, ModelMapper modelMapper) {
+    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, ModelMapper modelMapper) {
         this.adminRepository = adminRepository;
+        this.electionRepository = electionRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -41,10 +47,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ScheduleElectionResponse schedule(ScheduleElectionRequest request) {
-
-        return null;
+        Election election = modelMapper.map(request, Election.class);
+        election = electionRepository.save(election);
+        var electionResponse = modelMapper.map(election, ScheduleElectionResponse.class);
+        electionResponse.setTimeCreated(LocalDateTime.now());
+        return electionResponse;
     }
-
     @Override
     public Admin getAdminBy(Long id) {
         return adminRepository.findById(id)
