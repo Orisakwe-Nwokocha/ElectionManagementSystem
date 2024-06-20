@@ -5,10 +5,7 @@ import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRe
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -43,12 +40,11 @@ class AdminServiceImplTest {
         assertThat(adminRepository.count(), is(1L));
         try{
             adminService.register(adminRequest);
-
         } catch (ElectionManagementSystemBaseException message){
             assertEquals("Username cannot be null or empty", message.getMessage());
-
         }
     }
+
     @Test
     void schedule() {
     }
