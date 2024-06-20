@@ -41,16 +41,6 @@ public class VoterServiceTest {
         assertTrue(savedVoter.getStatus());
     }
 
-    private static CreateVoterRequest buildCreateVoterRequest() {
-        CreateVoterRequest request = new CreateVoterRequest();
-        request.setName("John Doe");
-        request.setPassword("password");
-        request.setAddress("123 Main St");
-        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setStateOfOrigin("Lagos");
-        return request;
-    }
-
     @Test
     public void testVoterCanCastBallot(){
         CastVoteRequest castVoteRequest = new CastVoteRequest();
@@ -67,6 +57,16 @@ public class VoterServiceTest {
         castVoteRequest.setVotingId(100L);
         castVoteRequest.setCandidateId(1L);
         castVoteRequest.setElectionId(1L);
+    }
+
+    private static CreateVoterRequest buildCreateVoterRequest() {
+        CreateVoterRequest request = new CreateVoterRequest();
+        request.setName("John Doe");
+        request.setPassword("password");
+        request.setAddress("123 Main St");
+        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
+        request.setStateOfOrigin("Lagos");
+        return request;
     }
 
 

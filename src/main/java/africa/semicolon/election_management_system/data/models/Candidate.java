@@ -37,7 +37,7 @@ public class Candidate {
     @Enumerated(STRING)
     private Category positionContested;
 
-    private Integer votingId;
+    private Long votingId;
     @Enumerated(value = STRING)
     private Role role;
     @ManyToOne

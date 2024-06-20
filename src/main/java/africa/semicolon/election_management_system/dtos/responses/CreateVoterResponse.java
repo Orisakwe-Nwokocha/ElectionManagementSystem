@@ -14,7 +14,7 @@ public class CreateVoterResponse {
     private Long id;
     private String name;
     private String identificationNumber;
-    private Integer votingId;
+    private Long votingId;
     private String message;
     @JsonFormat(pattern = "dd/MMM/yyyy 'at' hh:mm a")
     private LocalDateTime dateRegistered;

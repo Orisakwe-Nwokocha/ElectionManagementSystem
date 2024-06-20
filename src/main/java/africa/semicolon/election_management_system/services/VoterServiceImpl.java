@@ -33,7 +33,7 @@ public class VoterServiceImpl implements VoterService{
     @Override
     public CreateVoterResponse registerVoter(CreateVoterRequest request) {
         Voter voter = modelMapper.map(request, Voter.class);
-        long randomId = generateRandomId();
+        Long randomId = generateRandomId();
         voter.setVotingId(randomId);
         voter.setIdentificationNumber("ID" + randomId);
         voter.setStatus(true);
@@ -61,7 +61,7 @@ public class VoterServiceImpl implements VoterService{
         return response;
     }
 
-    private int generateRandomId() {
-        return 100000 + random.nextInt(1000000);
+    private long generateRandomId() {
+        return 100000 + random.nextLong(1000000);
     }
 }
