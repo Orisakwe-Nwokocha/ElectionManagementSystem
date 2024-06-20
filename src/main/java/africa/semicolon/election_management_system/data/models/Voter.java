@@ -40,7 +40,7 @@ public class Voter {
     private Boolean status;
 
     @Column(unique = true)
-    private Integer votingId;
+    private Long votingId;
     @Enumerated(value = STRING)
     private Role role;
 
@@ -53,6 +53,8 @@ public class Voter {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
+
+
 
 
     @PrePersist

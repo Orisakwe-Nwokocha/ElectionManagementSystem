@@ -1,7 +1,9 @@
 package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Voter;
+import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
+import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,7 @@ public class VoterServiceTest {
         assertNotNull(response.getDateRegistered());
         Voter savedVoter = voterService.getVoterById(response.getId());
         assertNotNull(savedVoter);
-        assertThat(savedVoter.getVotingId()).isBetween(100000, 1000000);
+        assertThat(savedVoter.getVotingId()).isBetween(100000L, 1000000L);
         assertTrue(savedVoter.getStatus());
     }
 
@@ -48,5 +50,24 @@ public class VoterServiceTest {
         request.setStateOfOrigin("Lagos");
         return request;
     }
+
+    @Test
+    public void testVoterCanCastBallot(){
+        CastVoteRequest castVoteRequest = new CastVoteRequest();
+        buildCastVoteRequest(castVoteRequest);
+        CastVoteResponse response = voterService.castVote(castVoteRequest);
+        assertNotNull(response);
+        assertNotNull(response.getVotingId());
+        assertNotNull(response.getDateRegistered());
+        assertNotNull(response.getMessage());
+
+    }
+
+    private static void buildCastVoteRequest(CastVoteRequest castVoteRequest) {
+        castVoteRequest.setVotingId(100L);
+        castVoteRequest.setCandidateId(1L);
+        castVoteRequest.setElectionId(1L);
+    }
+
 
 }
