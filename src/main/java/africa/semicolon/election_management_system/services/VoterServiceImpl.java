@@ -77,14 +77,19 @@ public class VoterServiceImpl implements VoterService{
     }
 
     @Override
+    public Voter getVoterByVotingId(Long votingId) {
+        return voterRepository.findByVotingId(votingId)
+                .orElseThrow(()-> new FailedVerificationException(
+                String.format("Voter could not be verified with %s", votingId)));
+    }
+
+    @Override
     public CastVoteResponse castVote(CastVoteRequest castVoteRequest) {
         Election election = electionService.getElectionBy(castVoteRequest.getElectionId());
         Candidate candidate = candidateService.getCandidateBy(castVoteRequest.getCandidateId());
         validate(election, candidate);
         Long votingId = castVoteRequest.getVotingId();
-        Voter voter = voterRepository.findByVotingId(votingId)
-                .orElseThrow(()-> new FailedVerificationException(
-                        String.format("Voter could not be verified with %s", votingId)));
+        Voter voter = getVoterByVotingId(votingId);
         validate(voter, election);
         Vote newVote = buildVote(voter, candidate, election);
         newVote = voteRepository.save(newVote);
