@@ -10,21 +10,15 @@ import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
-import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
-import africa.semicolon.election_management_system.exceptions.FailedVerificationException;
-import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
-import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
-import africa.semicolon.election_management_system.exceptions.VoterNotFoundException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
+import africa.semicolon.election_management_system.exceptions.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Objects;
 
 import static africa.semicolon.election_management_system.data.constants.Role.VOTER;
@@ -64,15 +58,22 @@ public class VoterServiceImpl implements VoterService{
     @Override
     public CreateVoterResponse registerVoter(CreateVoterRequest request) {
         Voter voter = modelMapper.map(request, Voter.class);
+        validateVoterAge(voter);
         Long randomId = generateRandomId();
         voter.setVotingId(randomId);
-        voter.setIdentificationNumber("ID" + randomId);
         voter.setStatus(true);
         voter.setRole(VOTER);
         Voter savedVoter = voterRepository.save(voter);
         var response = modelMapper.map(savedVoter, CreateVoterResponse.class);
         response.setMessage("Voter registered successfully");
         return response;
+    }
+
+    private static void validateVoterAge(Voter voter) {
+        LocalDate currentDate = LocalDate.now();
+        if (Period.between(voter.getDateOfBirth(), currentDate).getYears() < 18) {
+            throw new IneligibleToVoteException("Voter must be at least 18 years old.");
+        }
     }
 
     @Override
@@ -83,56 +84,18 @@ public class VoterServiceImpl implements VoterService{
 
     @Override
     public Voter getVoterByVotingId(Long votingId) {
-        return voterRepository.findByVotingId(votingId);
-
+        return voterRepository.findByVotingId(votingId)
+                .orElseThrow(()-> new FailedVerificationException(
+                String.format("Voter could not be verified with %s", votingId)));
     }
-
-//    @Override
-//    public UpdateVoterResponse updateVoter(Long votingId, JsonPatch jsonPatch) {
-//        try {
-//            Voter voter = getVoterByVotingId(votingId);
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            JsonNode voterNode = objectMapper.convertValue(voter, JsonNode.class);
-//            voterNode = jsonPatch.apply(voterNode);
-//
-//            voter = objectMapper.convertValue(voterNode, Voter.class);
-//            voter = voterRepository.save(voter);
-//            return modelMapper.map(voter, UpdateVoterResponse.class);
-//        }catch (JsonPatchException exception){
-//
-//        }
-//
-//    }
-
-    @Override
-    public UpdateVoterResponse updateVoter(Long votingId, JsonPatch jsonPatch) {
-        try {
-            Voter voter = getVoterByVotingId(votingId);
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode voterNode = objectMapper.convertValue(voter, JsonNode.class);
-            voterNode = jsonPatch.apply(voterNode);
-
-            voter = objectMapper.convertValue(voterNode, Voter.class);
-            voter = voterRepository.save(voter);
-            return modelMapper.map(voter, UpdateVoterResponse.class);
-        } catch (JsonPatchException exception) {
-            throw new FailedVerificationException("Unable to verify voteId");
-        }
-    }
-
 
     @Override
     public CastVoteResponse castVote(CastVoteRequest castVoteRequest) {
         Election election = electionService.getElectionBy(castVoteRequest.getElectionId());
         Candidate candidate = candidateService.getCandidateBy(castVoteRequest.getCandidateId());
         validate(election, candidate);
-        Voter voter = getVoterByVotingId(castVoteRequest.getVotingId());
-        if(voter == null) throw new FailedVerificationException("");
-
-//        Long votingId = castVoteRequest.getVotingId();
-//        Voter voter = voterRepository.findByVotingId(votingId)
-//                .orElseThrow(()-> new FailedVerificationException(
-//                        String.format("Voter could not be verified with %s", votingId)));
+        Long votingId = castVoteRequest.getVotingId();
+        Voter voter = getVoterByVotingId(votingId);
         validate(voter, election);
         Vote newVote = buildVote(voter, candidate, election);
         newVote = voteRepository.save(newVote);
