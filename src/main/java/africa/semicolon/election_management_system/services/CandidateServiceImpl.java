@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class CandidateServiceImpl implements CandidateService{
 
@@ -60,6 +62,11 @@ public class CandidateServiceImpl implements CandidateService{
     public Candidate getCandidateBy(Long id){
         return candidateRepository.findById(id)
                 .orElseThrow(()-> new CandidateNotFoundException("Candidate not found"));
+    }
+
+    @Override
+    public List<Candidate> getCandidatesFor(Long electionId) {
+        return candidateRepository.findAllCandidatesFor(electionId);
     }
 
     private Election getElection(Long electionId) {
