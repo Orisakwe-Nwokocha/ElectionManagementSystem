@@ -3,7 +3,9 @@ package africa.semicolon.election_management_system.services;
 import africa.semicolon.election_management_system.data.models.Admin;
 import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
+import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
+import africa.semicolon.election_management_system.data.repositories.VoterRepository;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
@@ -22,11 +24,16 @@ AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;
+    private final CandidateRepository candidateRepository;
+
+    private final VoterRepository voterRepository;
     private final ModelMapper modelMapper;
 
-    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, ModelMapper modelMapper) {
+    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, CandidateRepository candidateRepository, VoterRepository voterRepository, ModelMapper modelMapper) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
+        this.candidateRepository = candidateRepository;
+        this.voterRepository = voterRepository;
         this.modelMapper = modelMapper;
     }
 
