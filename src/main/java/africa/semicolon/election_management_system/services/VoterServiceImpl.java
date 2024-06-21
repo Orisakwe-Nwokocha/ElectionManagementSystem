@@ -85,11 +85,18 @@ public class VoterServiceImpl implements VoterService{
         Voter voter = voterRepository.findByVotingId(votingId)
                 .orElseThrow(()-> new FailedVerificationException(
                         String.format("Voter could not be verified with %s", votingId)));
+        validate(voter, election);
         Vote newVote = buildVote(voter, candidate, election);
         newVote = voteRepository.save(newVote);
         CastVoteResponse response = modelMapper.map(newVote, CastVoteResponse.class);
         response.setMessage("Voting casted successfully");
         return response;
+    }
+
+    private void validate(Voter voter, Election election) {
+        var votes = voteRepository.findVotesByVoterAndElection(voter.getId(), election.getId());
+        System.out.println(votes);
+        if (!votes.isEmpty()) throw new InvalidVoteException("Vote has already been casted");
     }
 
     private void validate(Election election, Candidate candidate) {
@@ -99,7 +106,7 @@ public class VoterServiceImpl implements VoterService{
         if (currentDate.isBefore(startDate) || currentDate.isAfter(endDate))
             throw new UnauthorizedException("Election is not open");
         if (!Objects.equals(election, candidate.getElection()))
-            throw new InvalidVoteException("Selected candidate is note eligible for the selected election");
+            throw new InvalidVoteException("Selected candidate is not eligible for the selected election");
     }
 
     private static Vote buildVote(Voter voter, Candidate candidate, Election election) {
