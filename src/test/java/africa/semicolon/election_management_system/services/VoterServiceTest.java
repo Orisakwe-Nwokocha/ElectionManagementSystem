@@ -6,6 +6,7 @@ import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
 import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -50,10 +51,7 @@ public class VoterServiceTest {
     @Test
     public void testVoterCanCastBallot(){
         CastVoteRequest castVoteRequest = buildCastVoteRequest();
-        var election = electionRepository.findById(301L).orElseThrow();
-        election.setStartDate(now().minusDays(1));
-        election.setEndDate(now().plusDays(1));
-        electionRepository.save(election);
+        updateElection();
         CastVoteResponse response = voterService.castVote(castVoteRequest);
         assertNotNull(response);
         assertThat(response.getMessage()).contains("success");
@@ -72,6 +70,21 @@ public class VoterServiceTest {
         CastVoteRequest castVoteRequest = buildCastVoteRequest();
         castVoteRequest.setElectionId(300L);
         assertThrows(UnauthorizedException.class, ()-> voterService.castVote(castVoteRequest));
+    }
+
+    @Test
+    public void testThatVoterCannotVoteIneligibleCandidate() {
+        CastVoteRequest request = buildCastVoteRequest();
+        updateElection();
+        request.setCandidateId(401L);
+        assertThrows(InvalidVoteException.class, ()-> voterService.castVote(request));
+    }
+
+    private void updateElection() {
+        var election = electionRepository.findById(301L).orElseThrow();
+        election.setStartDate(now().minusDays(1));
+        election.setEndDate(now().plusDays(1));
+        electionRepository.save(election);
     }
 
     private static CastVoteRequest buildCastVoteRequest() {

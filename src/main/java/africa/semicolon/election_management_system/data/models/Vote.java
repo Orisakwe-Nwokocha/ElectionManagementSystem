@@ -26,7 +26,7 @@ public class Vote {
     private Voter voter;
     @ManyToOne
     private Election election;
-    @OneToOne
+    @ManyToOne
     private Candidate candidate;
 
     @Setter(NONE)

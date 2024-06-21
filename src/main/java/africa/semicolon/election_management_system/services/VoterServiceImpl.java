@@ -11,6 +11,7 @@ import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequ
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
 import africa.semicolon.election_management_system.exceptions.FailedVerificationException;
+import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
 import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
 import africa.semicolon.election_management_system.exceptions.VoterNotFoundException;
 import org.modelmapper.ModelMapper;
@@ -19,6 +20,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Objects;
 
 import static africa.semicolon.election_management_system.data.constants.Role.VOTER;
 import static java.time.LocalDateTime.now;
@@ -77,12 +79,12 @@ public class VoterServiceImpl implements VoterService{
     @Override
     public CastVoteResponse castVote(CastVoteRequest castVoteRequest) {
         Election election = electionService.getElectionBy(castVoteRequest.getElectionId());
-        validate(election);
+        Candidate candidate = candidateService.getCandidateBy(castVoteRequest.getCandidateId());
+        validate(election, candidate);
         Long votingId = castVoteRequest.getVotingId();
         Voter voter = voterRepository.findByVotingId(votingId)
                 .orElseThrow(()-> new FailedVerificationException(
                         String.format("Voter could not be verified with %s", votingId)));
-        Candidate candidate = candidateService.getCandidateBy(castVoteRequest.getCandidateId());
         Vote newVote = buildVote(voter, candidate, election);
         newVote = voteRepository.save(newVote);
         CastVoteResponse response = modelMapper.map(newVote, CastVoteResponse.class);
@@ -90,11 +92,14 @@ public class VoterServiceImpl implements VoterService{
         return response;
     }
 
-    private void validate(Election election) {
+    private void validate(Election election, Candidate candidate) {
         var startDate = election.getStartDate();
         var endDate = election.getEndDate();
         var currentDate = now();
-        if (currentDate.isBefore(startDate) || currentDate.isAfter(endDate)) throw new UnauthorizedException("Election is not open");
+        if (currentDate.isBefore(startDate) || currentDate.isAfter(endDate))
+            throw new UnauthorizedException("Election is not open");
+        if (!Objects.equals(election, candidate.getElection()))
+            throw new InvalidVoteException("Selected candidate is note eligible for the selected election");
     }
 
     private static Vote buildVote(Voter voter, Candidate candidate, Election election) {
