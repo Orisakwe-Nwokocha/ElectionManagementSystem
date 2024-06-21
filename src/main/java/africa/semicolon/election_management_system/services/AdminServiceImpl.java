@@ -72,9 +72,21 @@ AdminServiceImpl implements AdminService {
         return candidateService.getCandidatesFor(electionId);
     }
     @Override
-    public DeleteCandidateResponse deleteCandidate(DeleteCandidateRequest deleteCandidateRequest) {
-        return candidateService.deleteCandidate(deleteCandidateRequest);
+    public DeleteCandidateResponse deleteCandidate(Candidate candidate) {
+        return getDeleteCandidateResponse(candidate);
     }
+    private DeleteCandidateResponse getDeleteCandidateResponse(Candidate candidate) {
+        if (candidate == null) {
+            DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
+            deleteCandidateResponse.setMessage("Candidate not found");
+            return deleteCandidateResponse;
+        }
+        candidateService.deleteCandidate(candidate);
+        DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
+        deleteCandidateResponse.setMessage("Candidate deleted successfully");
+        return deleteCandidateResponse;
+    }
+
 
     @Override
     public UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest) {

@@ -13,7 +13,7 @@ public interface AdminService {
     RegisterCandidateResponse registerCandidate(RegisterCandidateRequest request);
     Candidate getCandidateBy(Long id);
     List<Candidate> getCandidatesFor(Long electionId);
-    DeleteCandidateResponse deleteCandidate(DeleteCandidateRequest deleteCandidateRequest);
+    DeleteCandidateResponse deleteCandidate(Candidate candidate);
     UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest);
 
     Admin getAdminBy(Long id);

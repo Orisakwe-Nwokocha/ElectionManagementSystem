@@ -55,9 +55,10 @@ class CandidateServiceTest {
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
         assertThat(response).isNotNull();
         assertThat(response.getMessage()).contains("Candidate registered successfully");
-        DeleteCandidateRequest deleteCandidateRequest = new DeleteCandidateRequest();
-        deleteCandidateRequest.setId(response.getId());
-        DeleteCandidateResponse deleteCandidateResponse = candidateService.deleteCandidate(deleteCandidateRequest);
+        Candidate registeredCandidate = candidateService.getCandidateBy(response.getId());
+        assertThat(registeredCandidate.getName()).isEqualTo("John");
+        registeredCandidate.setId(response.getId());
+        DeleteCandidateResponse deleteCandidateResponse = candidateService.deleteCandidate(registeredCandidate);
         assertThat(deleteCandidateResponse).isNotNull();
         assertThat(deleteCandidateResponse.getMessage()).contains("Candidate deleted successfully");
 

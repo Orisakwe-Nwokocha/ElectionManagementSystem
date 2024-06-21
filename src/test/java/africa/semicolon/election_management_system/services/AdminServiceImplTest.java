@@ -102,19 +102,23 @@ class AdminServiceImplTest {
     }
 
     @Test
-    public void deleteCandidateTest(){
+    public void deleteCandidateTest() {
         RegisterCandidateRequest request = buildRequest();
         request.setElectionId(300L);
         RegisterCandidateResponse response = adminService.registerCandidate(request);
         assertThat(response).isNotNull();
         assertThat(response.getMessage()).contains("Candidate registered successfully");
-        DeleteCandidateRequest deleteCandidateRequest = new DeleteCandidateRequest();
-        deleteCandidateRequest.setId(response.getId());
-        DeleteCandidateResponse deleteCandidateResponse = adminService.deleteCandidate(deleteCandidateRequest);
+        Candidate registeredCandidate = adminService.getCandidateBy(response.getId());
+        assertThat(registeredCandidate.getName()).isEqualTo("John");
+
+        DeleteCandidateResponse deleteCandidateResponse = adminService.deleteCandidate(registeredCandidate);
+
         assertThat(deleteCandidateResponse).isNotNull();
-        assertThat(deleteCandidateResponse.getMessage()).contains("Candidate deleted successfully");
+        assertThat(deleteCandidateResponse.getMessage()).isEqualTo("Candidate deleted successfully");
 
     }
+
+
 
     @Test
     public void updateCandidateTest(){
