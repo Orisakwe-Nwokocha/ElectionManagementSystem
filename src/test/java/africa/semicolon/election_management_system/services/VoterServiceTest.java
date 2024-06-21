@@ -9,6 +9,7 @@ import africa.semicolon.election_management_system.dtos.responses.CreateVoterRes
 import africa.semicolon.election_management_system.exceptions.IneligibleToVoteException;
 import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
 import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
+import africa.semicolon.election_management_system.exceptions.IdentificationNumberAlreadyExistsException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,14 @@ public class VoterServiceTest {
     public void testThatIneligibleVoterCannotRegister(){
         CreateVoterRequest request = buildCreateIneligibleVoterRequest();
         assertThrows(IneligibleToVoteException.class, ()->voterService.registerVoter(request));
+    }
+    @Test
+    @DisplayName("test that only a voter with a unique voter ID can register")
+    public void testThatOnlyVotersWithUniqueVoterIdCanRegister(){
+        CreateVoterRequest request = buildCreateVoterRequest();
+        voterService.registerVoter(request);
+        assertThrows(IdentificationNumberAlreadyExistsException.class, ()->voterService.registerVoter(request));
+
     }
 
     @Test

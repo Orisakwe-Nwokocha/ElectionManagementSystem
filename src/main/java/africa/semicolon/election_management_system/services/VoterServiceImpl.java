@@ -20,6 +20,7 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
+import java.util.Optional;
 
 import static africa.semicolon.election_management_system.data.constants.Role.VOTER;
 import static java.time.LocalDateTime.now;
@@ -57,6 +58,8 @@ public class VoterServiceImpl implements VoterService{
 
     @Override
     public CreateVoterResponse registerVoter(CreateVoterRequest request) {
+        String identificationNUmber = request.getIdentificationNumber();
+        validateIdentificationNumber(identificationNUmber);
         Voter voter = modelMapper.map(request, Voter.class);
         validateVoterAge(voter);
         Long randomId = generateRandomId();
@@ -67,6 +70,13 @@ public class VoterServiceImpl implements VoterService{
         var response = modelMapper.map(savedVoter, CreateVoterResponse.class);
         response.setMessage("Voter registered successfully");
         return response;
+    }
+
+    private void validateIdentificationNumber(String identificationNUmber) {
+        Optional<Voter> registeredVoter = voterRepository.findByIdentificationNumber(identificationNUmber);
+        if (registeredVoter.isPresent()) {
+            throw new IdentificationNumberAlreadyExistsException("Identification number already exists.");
+        }
     }
 
     private static void validateVoterAge(Voter voter) {
