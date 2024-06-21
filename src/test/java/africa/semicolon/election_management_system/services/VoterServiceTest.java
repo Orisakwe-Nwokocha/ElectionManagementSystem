@@ -154,7 +154,7 @@ public class VoterServiceTest {
         return castVoteRequest;
     }
 
-    private static CreateVoterRequest buildCreateVoterRequest() {
+    public static CreateVoterRequest buildCreateVoterRequest() {
         CreateVoterRequest request = new CreateVoterRequest();
         request.setName("John Doe");
         request.setPassword("password");
