@@ -8,5 +8,5 @@ import java.util.List;
 public interface ElectionService {
     Election getElectionBy(Long id);
     List<Election> getAllElections();
-    ViewElectionResultsResponse viewElectionResults(Long id);
+    ViewElectionResultsResponse viewElectionResults(Long electionId);
 }
