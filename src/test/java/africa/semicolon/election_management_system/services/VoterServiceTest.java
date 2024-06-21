@@ -50,6 +50,7 @@ public class VoterServiceTest {
     }
 
     @Test
+    @DisplayName("test that a voter below 18 years cannot register")
     public void testThatIneligibleVoterCannotRegister(){
         CreateVoterRequest request = buildCreateIneligibleVoterRequest();
         assertThrows(IneligibleToVoteException.class, ()->voterService.registerVoter(request));
