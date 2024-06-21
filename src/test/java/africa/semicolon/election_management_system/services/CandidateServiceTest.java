@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import static africa.semicolon.election_management_system.data.constants.Category.NATIONAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.test.web.servlet.result.StatusResultMatchersExtensionsKt.isEqualTo;
 
 @SpringBootTest
 @Sql("/db/data.sql")
@@ -55,10 +54,9 @@ class CandidateServiceTest {
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
         assertThat(response).isNotNull();
         assertThat(response.getMessage()).contains("Candidate registered successfully");
-        Candidate registeredCandidate = candidateService.getCandidateBy(response.getId());
-        assertThat(registeredCandidate.getName()).isEqualTo("John");
-        registeredCandidate.setId(response.getId());
-        DeleteCandidateResponse deleteCandidateResponse = candidateService.deleteCandidate(registeredCandidate);
+        DeleteCandidateRequest deleteCandidateRequest = new DeleteCandidateRequest();
+        deleteCandidateRequest.setId(response.getId());
+        DeleteCandidateResponse deleteCandidateResponse = candidateService.deleteCandidate(deleteCandidateRequest);
         assertThat(deleteCandidateResponse).isNotNull();
         assertThat(deleteCandidateResponse.getMessage()).contains("Candidate deleted successfully");
 

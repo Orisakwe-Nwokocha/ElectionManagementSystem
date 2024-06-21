@@ -58,6 +58,7 @@ public class VoterServiceTest {
         assertThat(savedVoter.getVotingId()).isBetween(100000L, 1000000L);
         assertTrue(savedVoter.getStatus());
     }
+
     @Test
     public void testUpdateVoterDetails() throws JsonPointerException {
         String address = voterService.getVoterByVotingId(654321L).getAddress();
@@ -71,7 +72,6 @@ public class VoterServiceTest {
         assertThat(response).isNotNull();
         address = voterService.getVoterByVotingId(654321L).getAddress();
         assertThat(address).isEqualTo("4,Afolabi street");
-
     }
 
     @Test
@@ -80,13 +80,13 @@ public class VoterServiceTest {
         CreateVoterRequest request = buildCreateIneligibleVoterRequest();
         assertThrows(IneligibleToVoteException.class, ()->voterService.registerVoter(request));
     }
+
     @Test
-    @DisplayName("test that only a voter with a unique voter ID can register")
-    public void testThatOnlyVotersWithUniqueVoterIdCanRegister(){
+    @DisplayName("test that only a voter with a unique identification number can register")
+    public void registerVoterTest(){
         CreateVoterRequest request = buildCreateVoterRequest();
         voterService.registerVoter(request);
         assertThrows(IdentificationNumberAlreadyExistsException.class, ()->voterService.registerVoter(request));
-
     }
 
     @Test

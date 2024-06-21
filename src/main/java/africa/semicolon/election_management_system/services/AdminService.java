@@ -15,6 +15,5 @@ public interface AdminService {
     List<Candidate> getCandidatesFor(Long electionId);
     DeleteCandidateResponse deleteCandidate(Candidate candidate);
     UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest);
-
     Admin getAdminBy(Long id);
 }

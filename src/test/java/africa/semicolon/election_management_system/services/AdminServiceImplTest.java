@@ -118,8 +118,6 @@ class AdminServiceImplTest {
 
     }
 
-
-
     @Test
     public void updateCandidateTest(){
         RegisterCandidateRequest registerCandidateRequest = buildRequest();

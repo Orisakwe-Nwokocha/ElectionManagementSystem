@@ -39,7 +39,6 @@ public class VoterServiceImpl implements VoterService{
     private ElectionService electionService;
     private CandidateService candidateService;
 
-
     private final SecureRandom random = new SecureRandom();
 
     public VoterServiceImpl(VoterRepository voterRepository, VoteRepository voteRepository) {
@@ -62,8 +61,8 @@ public class VoterServiceImpl implements VoterService{
 
     @Override
     public CreateVoterResponse registerVoter(CreateVoterRequest request) {
-        String identificationNUmber = request.getIdentificationNumber();
-        validateIdentificationNumber(identificationNUmber);
+        String identificationNumber = request.getIdentificationNumber();
+        validateIdentificationNumber(identificationNumber);
         Voter voter = modelMapper.map(request, Voter.class);
         validateVoterAge(voter);
         Long randomId = generateRandomId();
@@ -74,20 +73,6 @@ public class VoterServiceImpl implements VoterService{
         var response = modelMapper.map(savedVoter, CreateVoterResponse.class);
         response.setMessage("Voter registered successfully");
         return response;
-    }
-
-    private void validateIdentificationNumber(String identificationNUmber) {
-        boolean condition = voterRepository.existsByIdentificationNumber(identificationNUmber);
-        if (condition) {
-            throw new IdentificationNumberAlreadyExistsException("Identification number already exists.");
-        }
-    }
-
-    private static void validateVoterAge(Voter voter) {
-        LocalDate currentDate = LocalDate.now();
-        if (Period.between(voter.getDateOfBirth(), currentDate).getYears() < 18) {
-            throw new IneligibleToVoteException("Voter must be at least 18 years old.");
-        }
     }
 
     @Override
@@ -119,7 +104,6 @@ public class VoterServiceImpl implements VoterService{
         }
     }
 
-
     @Override
     public CastVoteResponse castVote(CastVoteRequest castVoteRequest) {
         Election election = electionService.getElectionBy(castVoteRequest.getElectionId());
@@ -137,7 +121,6 @@ public class VoterServiceImpl implements VoterService{
 
     private void validate(Voter voter, Election election) {
         var votes = voteRepository.findVotesByVoterAndElection(voter.getId(), election.getId());
-        System.out.println(votes);
         if (!votes.isEmpty()) throw new InvalidVoteException("Vote has already been casted");
     }
 
@@ -151,15 +134,29 @@ public class VoterServiceImpl implements VoterService{
             throw new InvalidVoteException("Selected candidate is not eligible for the selected election");
     }
 
+    private long generateRandomId() {
+        return random.nextLong(100000,1000000);
+    }
+
+    private static void validateVoterAge(Voter voter) {
+        LocalDate currentDate = LocalDate.now();
+        if (Period.between(voter.getDateOfBirth(), currentDate).getYears() < 18) {
+            throw new IneligibleToVoteException("Voter must be at least 18 years old.");
+        }
+    }
+
+    private void validateIdentificationNumber(String identificationNumber) {
+        boolean condition = voterRepository.existsByIdentificationNumber(identificationNumber);
+        if (condition) {
+            throw new IdentificationNumberAlreadyExistsException("Identification number already exists.");
+        }
+    }
+
     private static Vote buildVote(Voter voter, Candidate candidate, Election election) {
         Vote newVote = new Vote();
         newVote.setVoter(voter);
         newVote.setCandidate(candidate);
         newVote.setElection(election);
         return newVote;
-    }
-
-    private long generateRandomId() {
-        return random.nextLong(100000,1000000);
     }
 }

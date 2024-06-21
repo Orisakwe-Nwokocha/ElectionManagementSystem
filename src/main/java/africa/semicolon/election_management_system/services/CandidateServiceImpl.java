@@ -4,6 +4,7 @@ import africa.semicolon.election_management_system.data.models.Candidate;
 import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
+import africa.semicolon.election_management_system.dtos.requests.DeleteCandidateRequest;
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
 import africa.semicolon.election_management_system.dtos.requests.UpdateCandidateRequest;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
@@ -87,10 +88,10 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public DeleteCandidateResponse deleteCandidate(Candidate deleteCandidateRequest) {
+    public DeleteCandidateResponse deleteCandidate(DeleteCandidateRequest deleteCandidateRequest) {
         Candidate foundCandidate = getCandidateBy(deleteCandidateRequest.getId());
         candidateRepository.delete(foundCandidate);
-        var response = modelMapper.map(foundCandidate, DeleteCandidateResponse.class);
+        DeleteCandidateResponse response = new DeleteCandidateResponse();
         response.setMessage("Candidate deleted successfully");
         return response;
     }
@@ -100,7 +101,7 @@ public class CandidateServiceImpl implements CandidateService {
         Election election = getElection(updateCandidateRequest.getElectionId());
         Candidate registeredCandidate = candidateRepository.findByIdentificationNumber(updateCandidateRequest.getIdentificationNumber());
         registeredCandidate.setElection(election);
-         modelMapper.map(updateCandidateRequest, registeredCandidate);
+        modelMapper.map(updateCandidateRequest, registeredCandidate);
         registeredCandidate = candidateRepository.save(registeredCandidate);
         var response = modelMapper.map(registeredCandidate, UpdateCandidateResponse.class);
         response.setMessage("Candidate updated successfully");
