@@ -17,7 +17,8 @@ import org.springframework.stereotype.Service;
 import static java.time.LocalDateTime.now;
 
 @Service
-public class AdminServiceImpl implements AdminService {
+public class
+AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;

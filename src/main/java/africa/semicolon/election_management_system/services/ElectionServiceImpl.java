@@ -14,6 +14,7 @@ public class ElectionServiceImpl implements ElectionService {
     private final ElectionRepository electionRepository;
 
     public ElectionServiceImpl(ElectionRepository electionRepository) {
+
         this.electionRepository = electionRepository;
     }
 

@@ -1,11 +1,15 @@
 package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Voter;
+import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
 import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
+import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,9 +17,9 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Slf4j
@@ -24,6 +28,9 @@ public class VoterServiceTest {
 
     @Autowired
     private VoterService voterService;
+    @Autowired
+    private ElectionRepository electionRepository;
+
 
     @Test
     public void testThatVoterCanRegister(){
@@ -41,6 +48,53 @@ public class VoterServiceTest {
         assertTrue(savedVoter.getStatus());
     }
 
+    @Test
+    public void testVoterCanCastBallot(){
+        CastVoteRequest castVoteRequest = buildCastVoteRequest();
+        updateElection();
+        CastVoteResponse response = voterService.castVote(castVoteRequest);
+        assertNotNull(response);
+        assertThat(response.getMessage()).contains("success");
+    }
+
+    @Test
+    @DisplayName("test that votes can only be cast when the election is open")
+    public void electionIsNotYetOpenTest(){
+        CastVoteRequest castVoteRequest = buildCastVoteRequest();
+        assertThrows(UnauthorizedException.class, ()-> voterService.castVote(castVoteRequest));
+    }
+
+    @Test
+    @DisplayName("test that votes can only be cast when the election is open")
+    public void electionIsClosedTest(){
+        CastVoteRequest castVoteRequest = buildCastVoteRequest();
+        castVoteRequest.setElectionId(300L);
+        assertThrows(UnauthorizedException.class, ()-> voterService.castVote(castVoteRequest));
+    }
+
+    @Test
+    public void testThatVoterCannotVoteIneligibleCandidate() {
+        CastVoteRequest request = buildCastVoteRequest();
+        updateElection();
+        request.setCandidateId(401L);
+        assertThrows(InvalidVoteException.class, ()-> voterService.castVote(request));
+    }
+
+    private void updateElection() {
+        var election = electionRepository.findById(301L).orElseThrow();
+        election.setStartDate(now().minusDays(1));
+        election.setEndDate(now().plusDays(1));
+        electionRepository.save(election);
+    }
+
+    private static CastVoteRequest buildCastVoteRequest() {
+        CastVoteRequest castVoteRequest = new CastVoteRequest();
+        castVoteRequest.setVotingId(654321L);
+        castVoteRequest.setCandidateId(400L);
+        castVoteRequest.setElectionId(301L);
+        return castVoteRequest;
+    }
+
     private static CreateVoterRequest buildCreateVoterRequest() {
         CreateVoterRequest request = new CreateVoterRequest();
         request.setName("John Doe");
@@ -49,24 +103,6 @@ public class VoterServiceTest {
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
         request.setStateOfOrigin("Lagos");
         return request;
-    }
-
-    @Test
-    public void testVoterCanCastBallot(){
-        CastVoteRequest castVoteRequest = new CastVoteRequest();
-        buildCastVoteRequest(castVoteRequest);
-        CastVoteResponse response = voterService.castVote(castVoteRequest);
-        assertNotNull(response);
-        assertNotNull(response.getVotingId());
-        assertNotNull(response.getDateRegistered());
-        assertNotNull(response.getMessage());
-
-    }
-
-    private static void buildCastVoteRequest(CastVoteRequest castVoteRequest) {
-        castVoteRequest.setVotingId(654321L);
-        castVoteRequest.setCandidateId(1L);
-        castVoteRequest.setElectionId(1L);
     }
 
 
