@@ -35,6 +35,7 @@ public class VoterServiceTest {
 
 
     @Test
+    @DisplayName("register valid voter successfully")
     public void testThatVoterCanRegister(){
         CreateVoterRequest request = buildCreateVoterRequest();
         CreateVoterResponse response = voterService.registerVoter(request);
