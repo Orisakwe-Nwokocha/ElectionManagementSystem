@@ -4,9 +4,13 @@ import africa.semicolon.election_management_system.data.models.Candidate;
 import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
+import africa.semicolon.election_management_system.dtos.requests.DeleteCandidateRequest;
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateCandidateRequest;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.dtos.responses.DeleteCandidateResponse;
 import africa.semicolon.election_management_system.dtos.responses.RegisterCandidateResponse;
+import africa.semicolon.election_management_system.dtos.responses.UpdateCandidateResponse;
 import africa.semicolon.election_management_system.exceptions.CandidateNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ResourceNotFoundException;
@@ -17,15 +21,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class CandidateServiceImpl implements CandidateService{
+public class CandidateServiceImpl implements CandidateService {
 
-   private final CandidateRepository candidateRepository;
-   private final ModelMapper modelMapper;
+    private final CandidateRepository candidateRepository;
+    private final ModelMapper modelMapper;
 
-   private VoterService voterService;
-   private ElectionService electionService;
+    private VoterService voterService;
+    private ElectionService electionService;
 
-    public CandidateServiceImpl(CandidateRepository candidateRepository, ModelMapper modelMapper){
+    public CandidateServiceImpl(CandidateRepository candidateRepository, ModelMapper modelMapper) {
         this.candidateRepository = candidateRepository;
         this.modelMapper = modelMapper;
     }
@@ -47,7 +51,7 @@ public class CandidateServiceImpl implements CandidateService{
     public RegisterCandidateResponse registerCandidate(RegisterCandidateRequest request) {
         Election election = getElection(request.getElectionId());
         CreateVoterResponse createVoterResponse = registerVoter(request);
-        Candidate candidate =  modelMapper.map(request, Candidate.class);
+        Candidate candidate = modelMapper.map(request, Candidate.class);
         candidate.setVotingId(createVoterResponse.getVotingId());
         candidate.setElection(election);
         candidate = candidateRepository.save(candidate);
@@ -57,15 +61,15 @@ public class CandidateServiceImpl implements CandidateService{
     }
 
     @Override
-    public Candidate getCandidateBy(Long id){
+    public Candidate getCandidateBy(Long id) {
         return candidateRepository.findById(id)
-                .orElseThrow(()-> new CandidateNotFoundException("Candidate not found"));
+                .orElseThrow(() -> new CandidateNotFoundException("Candidate not found"));
     }
 
     private Election getElection(Long electionId) {
         if (electionId == null) throw new ResourceNotFoundException("Election has not yet been scheduled");
         try {
-           return electionService.getElectionBy(electionId);
+            return electionService.getElectionBy(electionId);
         } catch (ElectionNotFoundException exception) {
             throw new ResourceNotFoundException("Election has not yet been scheduled");
         }
@@ -75,4 +79,26 @@ public class CandidateServiceImpl implements CandidateService{
         CreateVoterRequest createVoterRequest = modelMapper.map(request, CreateVoterRequest.class);
         return voterService.registerVoter(createVoterRequest);
     }
+
+    @Override
+    public DeleteCandidateResponse deleteCandidate(DeleteCandidateRequest deleteCandidateRequest) {
+        Candidate foundCandidate = getCandidateBy(deleteCandidateRequest.getId());
+        candidateRepository.delete(foundCandidate);
+        var response = modelMapper.map(foundCandidate, DeleteCandidateResponse.class);
+        response.setMessage("Candidate deleted successfully");
+        return response;
+    }
+
+    @Override
+    public UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest) {
+        Election election = getElection(updateCandidateRequest.getElectionId());
+        Candidate registeredCandidate = candidateRepository.findByIdentificationNumber(updateCandidateRequest.getIdentificationNumber());
+        registeredCandidate.setElection(election);
+         modelMapper.map(updateCandidateRequest, registeredCandidate);
+        registeredCandidate = candidateRepository.save(registeredCandidate);
+        var response = modelMapper.map(registeredCandidate, UpdateCandidateResponse.class);
+        response.setMessage("Candidate updated successfully");
+        return response;
+    }
+
 }
