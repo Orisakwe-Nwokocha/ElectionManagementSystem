@@ -6,7 +6,6 @@ import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
-import africa.semicolon.election_management_system.exceptions.ElectionNotFoundException;
 import africa.semicolon.election_management_system.exceptions.IneligibleToVoteException;
 import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
 import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
@@ -49,6 +48,7 @@ public class VoterServiceTest {
         assertThat(savedVoter.getVotingId()).isBetween(100000L, 1000000L);
         assertTrue(savedVoter.getStatus());
     }
+
     @Test
     public void testThatIneligibleVoterCannotRegister(){
         CreateVoterRequest request = buildCreateIneligibleVoterRequest();
@@ -68,8 +68,7 @@ public class VoterServiceTest {
     @DisplayName("test that votes can only be cast when the election is open")
     public void electionIsNotYetOpenTest(){
         CastVoteRequest castVoteRequest = buildCastVoteRequest();
-        castVoteRequest.setElectionId(200L);
-        assertThrows(ElectionNotFoundException.class, ()-> voterService.castVote(castVoteRequest));
+        assertThrows(UnauthorizedException.class, ()-> voterService.castVote(castVoteRequest));
     }
 
     @Test
