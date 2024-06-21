@@ -72,16 +72,6 @@ public class VoterServiceTest {
        assertThat(address).isEqualTo("4,Afolabi street");
 
    }
-//   private static UpdateVoterRequest buildUpdateVoterRequest() {
-//       UpdateVoterRequest request = new UpdateVoterRequest();
-//       request.setVotingId(654321L);
-//       request.setAddress("123 Main St");
-//       request.setName("John doe");
-//       request.setPassword("password");
-//       request.setStateOfOrigin("Lagos");
-//       request.setDateOfBirth(LocalDate.of(1990, 2, 15));
-//       return request;
-//   }
 
     @Test
     public void testVoterCanCastBallot(){
