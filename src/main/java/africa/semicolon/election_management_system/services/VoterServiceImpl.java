@@ -10,7 +10,12 @@ import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
 import africa.semicolon.election_management_system.exceptions.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -87,6 +92,23 @@ public class VoterServiceImpl implements VoterService{
         return voterRepository.findByVotingId(votingId)
                 .orElseThrow(()-> new FailedVerificationException(
                 String.format("Voter could not be verified with %s", votingId)));
+    }
+
+    @Override
+    public UpdateVoterResponse updateVoter(Long votingId, JsonPatch jsonPatch) {
+        try {
+            Voter voter = getVoterByVotingId(votingId);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode voterNode = objectMapper.convertValue(voter, JsonNode.class);
+            voterNode = jsonPatch.apply(voterNode);
+
+            voter = objectMapper.convertValue(voterNode, Voter.class);
+            voter = voterRepository.save(voter);
+            return modelMapper.map(voter, UpdateVoterResponse.class);
+        } catch (JsonPatchException exception) {
+            throw new FailedVerificationException("Unable to verify voteId");
+        }
+
     }
 
     @Override
