@@ -68,6 +68,7 @@ public class VoterServiceTest {
     @DisplayName("test that votes can only be cast when the election is open")
     public void electionIsNotYetOpenTest(){
         CastVoteRequest castVoteRequest = buildCastVoteRequest();
+        castVoteRequest.setElectionId(200L);
         assertThrows(ElectionNotFoundException.class, ()-> voterService.castVote(castVoteRequest));
     }
 
