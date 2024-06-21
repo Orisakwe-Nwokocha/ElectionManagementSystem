@@ -1,3 +1,4 @@
+
 TRUNCATE TABLE voters CASCADE;
 TRUNCATE TABLE admin CASCADE;
 TRUNCATE TABLE elections CASCADE;
@@ -6,7 +7,7 @@ TRUNCATE TABLE votes CASCADE;
 
 INSERT INTO voters(id, name, identification_number, password, address, date_of_birth,
                    state_of_origin, status, voting_id, role, date_registered) VALUES
-                     (100, 'Jane Doe', '123456', 'password', '456 Elm St', '1985-02-15', 'Lagos', true, 654321, 'VOTER', '2023-01-01T00:00:00'),
+                                                                                  (100, 'Jane Doe', '123456', 'password', '456 Elm St', '1985-02-15', 'Lagos', true, 654321, 'VOTER', '2023-01-01T00:00:00'),
                                                                                   (101, 'John Doe', '123457', 'password', 'address', '2000-07-20', 'Kano', true, 654322, 'VOTER', '2023-01-01T00:00:00'),
                                                                                   (102, 'Johnny Doe', '123458', 'password', 'address', '1992-04-07', 'Bauchi', true, 654323, 'VOTER', '2023-01-01T00:00:00'),
                                                                                   (103, 'Jean Grey', '123459', 'password', 'address', '2002-12-31', 'Enugu', true, 654324, 'VOTER', '2023-01-01T00:00:00'),

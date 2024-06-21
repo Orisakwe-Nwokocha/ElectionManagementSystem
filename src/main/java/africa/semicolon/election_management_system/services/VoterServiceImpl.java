@@ -20,7 +20,6 @@ import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Objects;
-import java.util.Optional;
 
 import static africa.semicolon.election_management_system.data.constants.Role.VOTER;
 import static java.time.LocalDateTime.now;
@@ -73,8 +72,8 @@ public class VoterServiceImpl implements VoterService{
     }
 
     private void validateIdentificationNumber(String identificationNUmber) {
-        Optional<Voter> registeredVoter = voterRepository.findByIdentificationNumber(identificationNUmber);
-        if (registeredVoter.isPresent()) {
+        Boolean condition = voterRepository.existByIdentificationNumber(identificationNUmber);
+        if (condition) {
             throw new IdentificationNumberAlreadyExistsException("Identification number already exists.");
         }
     }
