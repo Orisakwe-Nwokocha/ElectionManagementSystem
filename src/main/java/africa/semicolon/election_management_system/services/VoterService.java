@@ -11,6 +11,8 @@ public interface VoterService {
 
     Voter getVoterById(Long id);
 
+    Voter getVoterByVotingId(Long votingId);
+
     CastVoteResponse castVote(CastVoteRequest castVoteRequest);
 
 
