@@ -10,7 +10,9 @@ import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
 import africa.semicolon.election_management_system.exceptions.*;
+import com.github.fge.jsonpatch.JsonPatch;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -96,6 +98,11 @@ public class VoterServiceImpl implements VoterService{
         return voterRepository.findByVotingId(votingId)
                 .orElseThrow(()-> new FailedVerificationException(
                 String.format("Voter could not be verified with %s", votingId)));
+    }
+
+    @Override
+    public UpdateVoterResponse updateVoter(Long votingId, JsonPatch jsonPatch) {
+        return null;
     }
 
     @Override
