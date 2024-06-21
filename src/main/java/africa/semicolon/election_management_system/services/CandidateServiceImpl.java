@@ -4,7 +4,6 @@ import africa.semicolon.election_management_system.data.models.Candidate;
 import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
-import africa.semicolon.election_management_system.dtos.requests.DeleteCandidateRequest;
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
 import africa.semicolon.election_management_system.dtos.requests.UpdateCandidateRequest;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
@@ -88,7 +87,7 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     @Override
-    public DeleteCandidateResponse deleteCandidate(DeleteCandidateRequest deleteCandidateRequest) {
+    public DeleteCandidateResponse deleteCandidate(Candidate deleteCandidateRequest) {
         Candidate foundCandidate = getCandidateBy(deleteCandidateRequest.getId());
         candidateRepository.delete(foundCandidate);
         var response = modelMapper.map(foundCandidate, DeleteCandidateResponse.class);
