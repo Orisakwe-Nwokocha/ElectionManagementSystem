@@ -26,12 +26,15 @@ AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;
     private final CandidateService candidateService;
+
+    private final CandidateRepository candidateRepository;
     private final ModelMapper modelMapper;
 
-    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, CandidateService candidateService,  ModelMapper modelMapper) {
+    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, CandidateService candidateService, CandidateRepository candidateRepository, ModelMapper modelMapper) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
         this.candidateService = candidateService;
+        this.candidateRepository = candidateRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -81,7 +84,7 @@ AdminServiceImpl implements AdminService {
             deleteCandidateResponse.setMessage("Candidate not found");
             return deleteCandidateResponse;
         }
-        candidateService.deleteCandidate(candidate);
+        candidateRepository.delete(candidate);
         DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
         deleteCandidateResponse.setMessage("Candidate deleted successfully");
         return deleteCandidateResponse;
