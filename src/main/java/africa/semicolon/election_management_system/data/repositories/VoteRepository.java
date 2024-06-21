@@ -6,4 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VoteRepository extends JpaRepository<Vote, Long> {
 
+    Vote findByCandidateId(Long candidateId);
+
+    Vote findByElectionId(Long electionId);
 }

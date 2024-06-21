@@ -7,6 +7,7 @@ import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.exceptions.FailedVerificationException;
 import africa.semicolon.election_management_system.exceptions.VoterNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -51,8 +52,15 @@ public class VoterServiceImpl implements VoterService{
     }
 
     @Override
+    public Voter getVoterByVotingId(Long votingId) {
+        return voterRepository.findByVotingId(votingId);
+    }
+
+    @Override
     public CastVoteResponse castVote(CastVoteRequest castVoteRequest) {
-        Voter voter = getVoterById(castVoteRequest.getVotingId());
+        Voter voter = getVoterByVotingId(castVoteRequest.getVotingId());
+        if(voter == null)
+            throw new FailedVerificationException("Invalid verification");
         voteRepository.findByCandidateId(castVoteRequest.getCandidateId());
         voteRepository.findByElectionId(castVoteRequest.getElectionId());
         voter = voterRepository.save(voter);
