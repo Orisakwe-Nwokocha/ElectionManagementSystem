@@ -4,10 +4,18 @@ import africa.semicolon.election_management_system.data.models.Voter;
 import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
 import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.CastVoteResponse;
 import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
+import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
 import africa.semicolon.election_management_system.exceptions.InvalidVoteException;
 import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.github.fge.jackson.jsonpointer.JsonPointerException;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchOperation;
+import com.github.fge.jsonpatch.ReplaceOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -47,6 +56,32 @@ public class VoterServiceTest {
         assertThat(savedVoter.getVotingId()).isBetween(100000L, 1000000L);
         assertTrue(savedVoter.getStatus());
     }
+
+   @Test
+   public void testUpdateVoterDetails() throws JsonPointerException {
+        String address = voterService.getVoterByVotingId(654321L).getAddress();
+        assertThat(address).isNotEqualTo("4,Afolabi street");
+        List<JsonPatchOperation> operations = List.of(
+               new ReplaceOperation(new JsonPointer("/address"),
+                       new TextNode("4,Afolabi street"))
+        );
+       JsonPatch updateVoterRequest = new JsonPatch(operations);
+       UpdateVoterResponse response = voterService.updateVoter(654321L,updateVoterRequest);
+       assertThat(response).isNotNull();
+       address = voterService.getVoterByVotingId(654321L).getAddress();
+       assertThat(address).isEqualTo("4,Afolabi street");
+
+   }
+//   private static UpdateVoterRequest buildUpdateVoterRequest() {
+//       UpdateVoterRequest request = new UpdateVoterRequest();
+//       request.setVotingId(654321L);
+//       request.setAddress("123 Main St");
+//       request.setName("John doe");
+//       request.setPassword("password");
+//       request.setStateOfOrigin("Lagos");
+//       request.setDateOfBirth(LocalDate.of(1990, 2, 15));
+//       return request;
+//   }
 
     @Test
     public void testVoterCanCastBallot(){
