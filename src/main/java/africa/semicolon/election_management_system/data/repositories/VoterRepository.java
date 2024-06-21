@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface VoterRepository extends JpaRepository<Voter, Long> {
     Optional<Voter> findByVotingId(Long votingId);
-    Boolean existByIdentificationNumber(String identificationNumber);
+    boolean existsByIdentificationNumber(String identificationNumber);
 }

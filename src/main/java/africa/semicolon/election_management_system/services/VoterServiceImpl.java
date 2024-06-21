@@ -72,7 +72,7 @@ public class VoterServiceImpl implements VoterService{
     }
 
     private void validateIdentificationNumber(String identificationNUmber) {
-        Boolean condition = voterRepository.existByIdentificationNumber(identificationNUmber);
+        boolean condition = voterRepository.existsByIdentificationNumber(identificationNUmber);
         if (condition) {
             throw new IdentificationNumberAlreadyExistsException("Identification number already exists.");
         }
