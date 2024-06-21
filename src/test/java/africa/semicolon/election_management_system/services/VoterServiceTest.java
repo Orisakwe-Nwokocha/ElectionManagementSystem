@@ -73,11 +73,29 @@ public class VoterServiceTest {
     }
 
     @Test
-    public void testThatVoterCannotVoteIneligibleCandidate() {
+    @DisplayName("test that voter cannot vote for ineligible candidate")
+    public void voteCastingTest() {
         CastVoteRequest request = buildCastVoteRequest();
         updateElection();
         request.setCandidateId(401L);
         assertThrows(InvalidVoteException.class, ()-> voterService.castVote(request));
+    }
+
+    @Test
+    @DisplayName("test that voter cannot vote twice")
+    public void voteCastingTest2() {
+        CastVoteRequest request = buildCastVoteRequest();
+        updateElection();
+        CastVoteResponse response = voterService.castVote(request);
+        assertNotNull(response);
+        assertThat(response.getMessage()).contains("success");
+        try {
+            CastVoteResponse response2 = voterService.castVote(request);
+            assertThat(response2).isNull();
+        } catch (InvalidVoteException exception) {
+            assertThat(exception).isNotNull();
+            assertThat(exception.getMessage()).contains("already");
+        }
     }
 
     private void updateElection() {
