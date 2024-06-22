@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UpdateVoterResponse {
+    private String address;
     private String name;
     private String identificationNumber;
     private Long votingId;
