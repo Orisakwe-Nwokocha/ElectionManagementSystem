@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.time.LocalDateTime.now;
 import static lombok.AccessLevel.NONE;
@@ -21,11 +22,12 @@ import static lombok.AccessLevel.NONE;
 @Setter
 public class Admin {
     @Id
-    @GeneratedValue(strategy =  IDENTITY)
+    @GeneratedValue(strategy =IDENTITY)
     private Long id;
     private String address;
     private String username;
     private String password;
+    @Enumerated(value = STRING)
     private Role role;
 
     @Setter(NONE)

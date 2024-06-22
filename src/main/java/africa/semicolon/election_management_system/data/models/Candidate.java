@@ -13,8 +13,10 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static java.time.LocalDateTime.now;
+import static lombok.AccessLevel.NONE;
 
 @Entity
 @Table(name = "candidates")
@@ -25,25 +27,33 @@ public class Candidate {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String name;
+    @Column(unique = true)
+    private String identificationNumber;
     private String password;
     private String address;
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    private LocalDate dob;
+    private LocalDate dateOfBirth;
     private String stateOfOrigin;
     private String partyAffiliation;
+    @Enumerated(STRING)
     private Category positionContested;
-    private String identificationNumber;
-    private Integer votingId;
+
+    private Long votingId;
+    @Enumerated(value = STRING)
     private Role role;
     @ManyToOne
+    @JoinColumn(name = "election_id")
     private Election election;
+
+    @Setter(NONE)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateRegistered;
+
+    @Setter(NONE)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
+
     @PrePersist
     private void setDateRegistered() {
         dateRegistered = now();

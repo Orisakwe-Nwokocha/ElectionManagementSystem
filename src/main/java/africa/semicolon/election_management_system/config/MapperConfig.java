@@ -18,4 +18,5 @@ public class MapperConfig {
                 .setPropertyCondition(isNotNull());
         return modelMapper;
     }
+
 }
