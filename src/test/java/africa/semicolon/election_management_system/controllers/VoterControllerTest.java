@@ -1,7 +1,6 @@
 package africa.semicolon.election_management_system.controllers;
 
 import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
-import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -46,7 +45,7 @@ public class VoterControllerTest {
         String jsonPatch = "[{\"op\":\"replace\",\"path\":\"/address\",\"value\":\"4 Afolabi street\"}]";
         UpdateVoterResponse response = new UpdateVoterResponse();
         response.setAddress("");
-        mockMvc.perform(patch("/api/v1/voter{votingId}", votingId)
+        mockMvc.perform(patch("/api/v1/voter/update/{votingId}", votingId)
                         .contentType("application/json-patch+json")
                         .content(jsonPatch))
                 .andExpect(status().is2xxSuccessful())

@@ -1,7 +1,6 @@
 package africa.semicolon.election_management_system.controllers;
 
 import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
-import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
 import africa.semicolon.election_management_system.services.VoterService;
 import com.github.fge.jsonpatch.JsonPatch;
@@ -20,7 +19,7 @@ public class VoterController {
         return ResponseEntity.ok(voterService.castVote(request));
     }
 
-    @PatchMapping
+    @PatchMapping("/update/{votingId}")
     public ResponseEntity<?> updateVotersDetail(@PathVariable Long votingId, @RequestBody JsonPatch jsonPatch) {
         UpdateVoterResponse response = voterService.updateVoter(votingId, jsonPatch);
         return ResponseEntity.ok(response);
