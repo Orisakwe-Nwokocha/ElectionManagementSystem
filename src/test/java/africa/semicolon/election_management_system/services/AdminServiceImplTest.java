@@ -2,11 +2,16 @@ package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.constants.Category;
 import africa.semicolon.election_management_system.data.models.Admin;
+import africa.semicolon.election_management_system.data.models.Voter;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
+import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
+import africa.semicolon.election_management_system.dtos.responses.CreateVoterResponse;
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
 import africa.semicolon.election_management_system.dtos.responses.ScheduleElectionResponse;
+import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import org.junit.jupiter.api.DisplayName;
@@ -15,8 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import static africa.semicolon.election_management_system.data.constants.Role.VOTER;
 import static java.time.Month.SEPTEMBER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -32,6 +39,7 @@ class AdminServiceImplTest {
     @Autowired
     private AdminRepository adminRepository;
 
+
     @Test
     void testAdminCanRegisterSuccessfully() {
         RegisterAdminRequest adminRequest = new RegisterAdminRequest();
@@ -41,7 +49,6 @@ class AdminServiceImplTest {
         assertNotNull(adminResponse);
         assertTrue(adminResponse.getMessage().contains("successfully"));
     }
-
     @Test
     void testAdminCanNotRegisterWithAnEmptyUsername() {
         RegisterAdminRequest adminRequest = new RegisterAdminRequest();
@@ -76,5 +83,16 @@ class AdminServiceImplTest {
         request.setCategory(Category.LGA);
         ScheduleElectionResponse scheduleResponse = adminService.schedule(request);
         assertNotNull(scheduleResponse);
+    }
+
+    @Test
+    public void testUpdateVoter() {
+        UpdateVoterRequest updateVoterRequest = new UpdateVoterRequest();
+        updateVoterRequest.setIdentificationNumber("123456");
+        updateVoterRequest.setName("Jane Smith");
+        updateVoterRequest.setPassword("newPassword");
+        UpdateVoterResponse updateResponse = adminService.updateVoter(updateVoterRequest, adminService);
+        assertNotNull(updateResponse);
+        assertEquals("Voter updated successfully", updateResponse.getMessage());
     }
 }

@@ -3,6 +3,7 @@ package africa.semicolon.election_management_system.controllers;
 import africa.semicolon.election_management_system.data.constants.Category;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 
 import static java.time.Month.SEPTEMBER;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,7 +42,6 @@ class AdminControllerTest {
                 .andDo(print());
     }
 
-
     @Test
     void testSchedulingElectionEndPoint() throws Exception {
         ScheduleElectionRequest scheduleElectionRequest = new ScheduleElectionRequest();
@@ -54,5 +55,4 @@ class AdminControllerTest {
                 .andExpect(status().isCreated())
                 .andDo(print());
     }
-
 }

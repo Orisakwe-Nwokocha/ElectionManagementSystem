@@ -54,9 +54,6 @@ public class Voter {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime dateUpdated;
 
-
-
-
     @PrePersist
     private void setDateRegistered(){
         this.dateRegistered = now();

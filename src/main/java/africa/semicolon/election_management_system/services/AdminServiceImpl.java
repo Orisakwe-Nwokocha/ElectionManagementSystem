@@ -2,17 +2,22 @@ package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Admin;
 import africa.semicolon.election_management_system.data.models.Election;
+import africa.semicolon.election_management_system.data.models.Voter;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
 import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
+import africa.semicolon.election_management_system.data.repositories.VoteRepository;
+import africa.semicolon.election_management_system.data.repositories.VoterRepository;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
 import africa.semicolon.election_management_system.dtos.responses.ScheduleElectionResponse;
-import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
-import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
-import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
+import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
+import africa.semicolon.election_management_system.exceptions.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 
@@ -23,10 +28,12 @@ AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;
     private final ModelMapper modelMapper;
+    private final VoterRepository voterRepository;
 
-    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, ModelMapper modelMapper) {
+    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, VoterRepository voterRepository, ModelMapper modelMapper) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
+        this.voterRepository = voterRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -66,4 +73,22 @@ AdminServiceImpl implements AdminService {
         if (usernameExists) throw new UsernameExistsException("Username already taken");
     }
 
+    @Override
+    public UpdateVoterResponse updateVoter(UpdateVoterRequest request, AdminService adminService){
+        if (adminService == null) {
+            throw new UnauthorizedAccessException("Only AdminService can update voters");
+        }
+
+        Optional<Voter> voter = voterRepository.findByIdentificationNumber(request.getIdentificationNumber());
+        if (voter.isPresent()) {
+            Voter existingVoter = voter.get();
+            modelMapper.map(request, Voter.class);
+            Voter updatedVoter = voterRepository.save(existingVoter);
+            UpdateVoterResponse response = modelMapper.map(updatedVoter, UpdateVoterResponse.class);
+            response.setMessage("Voter updated successfully");
+            return response;
+        } else {
+            throw new VoterNotFoundException("Voter not found, please register voter");
+        }
+    }
 }

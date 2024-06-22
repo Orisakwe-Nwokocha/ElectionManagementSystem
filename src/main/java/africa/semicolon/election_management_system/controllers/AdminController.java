@@ -3,13 +3,12 @@ package africa.semicolon.election_management_system.controllers;
 
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateCandidateRequest;
+import africa.semicolon.election_management_system.dtos.requests.UpdateVoterRequest;
 import africa.semicolon.election_management_system.services.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
