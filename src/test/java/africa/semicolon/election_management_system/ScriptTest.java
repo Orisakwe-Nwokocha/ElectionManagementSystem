@@ -28,7 +28,7 @@ public class ScriptTest {
     @DisplayName("testing dummy data")
     public void testScript() {
         List<Voter> voters = voterRepository.findAll();
-        assertThat(voters).hasSize(1);
+        assertThat(voters.size()).isGreaterThanOrEqualTo(7);
         System.out.println(voters);
     }
 

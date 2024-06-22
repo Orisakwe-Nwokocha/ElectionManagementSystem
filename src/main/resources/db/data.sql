@@ -13,7 +13,8 @@ INSERT INTO voters(id, name, identification_number, password, address, date_of_b
 (102, 'Johnny Doe', '123458', 'password', 'address', '1992-04-07', 'Bauchi', true, 654323, 'VOTER', '2023-01-01T00:00:00'),
 (103, 'Jean Grey', '123459', 'password', 'address', '2002-12-31', 'Enugu', true, 654324, 'VOTER', '2023-01-01T00:00:00'),
 (104, 'Janet Doe', '123450', 'password', 'address', '1976-10-01', 'Ogun', true, 654325, 'VOTER', '2023-01-01T00:00:00'),
-(105, 'Joe Doe', '123451', 'password', 'address', '1962-05-23', 'Bayelsa', true, 654326, 'VOTER', '2023-01-01T00:00:00'),
+(105, 'Joe Doe', '123451', '$2a$10$liFcMrm6W5tZBDxbMlkfUeajKXhthr.U8R5znNKhXygrInpnmW6we', 'address',
+ '1962-05-23', 'Bayelsa', true, 654326, 'VOTER', '2023-01-01T00:00:00'),
 (106, 'Jon Doe', '123452', 'password', 'address', '1984-01-12', 'Kogi', true, 654327, 'VOTER', '2023-01-01T00:00:00');
 
 INSERT INTO admin(id, address, username, password, role, date_registered) VALUES

@@ -11,5 +11,6 @@ import java.util.List;
 @Setter
 @ToString
 public class ViewElectionResultsResponse {
+    private int totalVotes;
     private List<CandidateResultResponse> candidateResultResponses = new ArrayList<>();
 }

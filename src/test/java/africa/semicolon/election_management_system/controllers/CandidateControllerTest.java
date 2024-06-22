@@ -26,7 +26,7 @@ public class CandidateControllerTest {
 
     @Test
     void testRegisterCandidateTest() throws Exception {
-        final RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
+        RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
         mockMvc.perform(post("/api/v1/candidate/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(registerCandidateRequest)))

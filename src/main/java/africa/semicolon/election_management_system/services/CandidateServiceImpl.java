@@ -17,6 +17,7 @@ import africa.semicolon.election_management_system.exceptions.ResourceNotFoundEx
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,13 +27,16 @@ import java.util.List;
 public class CandidateServiceImpl implements CandidateService {
 
     private final CandidateRepository candidateRepository;
+    private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
     private VoterService voterService;
     private ElectionService electionService;
 
-    public CandidateServiceImpl(CandidateRepository candidateRepository, ModelMapper modelMapper) {
+    public CandidateServiceImpl(CandidateRepository candidateRepository,
+                                PasswordEncoder passwordEncoder, ModelMapper modelMapper) {
         this.candidateRepository = candidateRepository;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = modelMapper;
     }
 
@@ -56,6 +60,7 @@ public class CandidateServiceImpl implements CandidateService {
         Candidate candidate = modelMapper.map(request, Candidate.class);
         candidate.setVotingId(createVoterResponse.getVotingId());
         candidate.setElection(election);
+        candidate.setPassword(passwordEncoder.encode(request.getPassword()));
         candidate = candidateRepository.save(candidate);
         var response = modelMapper.map(candidate, RegisterCandidateResponse.class);
         response.setMessage("Candidate registered successfully");
@@ -99,7 +104,8 @@ public class CandidateServiceImpl implements CandidateService {
     @Override
     public UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest) {
         Election election = getElection(updateCandidateRequest.getElectionId());
-        Candidate registeredCandidate = candidateRepository.findByIdentificationNumber(updateCandidateRequest.getIdentificationNumber());
+        Candidate registeredCandidate = candidateRepository.findByIdentificationNumber(updateCandidateRequest.getIdentificationNumber())
+                .orElseThrow(()-> new CandidateNotFoundException("Candidate not found"));
         registeredCandidate.setElection(election);
         modelMapper.map(updateCandidateRequest, registeredCandidate);
         registeredCandidate = candidateRepository.save(registeredCandidate);

@@ -19,6 +19,7 @@ import com.github.fge.jsonpatch.JsonPatchException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -35,15 +36,18 @@ public class VoterServiceImpl implements VoterService{
     private final VoterRepository voterRepository;
     private final ModelMapper modelMapper;
     private final VoteRepository voteRepository;
+    private final PasswordEncoder passwordEncoder;
 
     private ElectionService electionService;
     private CandidateService candidateService;
 
     private final SecureRandom random = new SecureRandom();
 
-    public VoterServiceImpl(VoterRepository voterRepository, VoteRepository voteRepository) {
+    public VoterServiceImpl(VoterRepository voterRepository, VoteRepository voteRepository,
+                            PasswordEncoder passwordEncoder) {
         this.voterRepository = voterRepository;
         this.voteRepository = voteRepository;
+        this.passwordEncoder = passwordEncoder;
         this.modelMapper = new ModelMapper();
     }
 
@@ -69,6 +73,7 @@ public class VoterServiceImpl implements VoterService{
         voter.setVotingId(randomId);
         voter.setStatus(true);
         voter.setRole(VOTER);
+        voter.setPassword(passwordEncoder.encode(request.getPassword()));
         Voter savedVoter = voterRepository.save(voter);
         var response = modelMapper.map(savedVoter, CreateVoterResponse.class);
         response.setMessage("Voter registered successfully");

@@ -17,7 +17,6 @@ public class RegisterCandidateResponse {
     private Long id;
     private String partyAffiliation;
     private Category positionContested;
-    @JsonProperty("voter_id")
     private Integer votingId;
     @JsonFormat(pattern = "dd/MMM/yyyy 'at' hh:mm a")
     private LocalDateTime dateRegistered;

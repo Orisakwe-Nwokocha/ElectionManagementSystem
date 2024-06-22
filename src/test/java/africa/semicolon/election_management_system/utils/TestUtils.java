@@ -50,6 +50,7 @@ public class TestUtils {
         request.setPartyAffiliation("P.D.P");
         request.setPositionContested(NATIONAL);
         request.setStateOfOrigin("Benue");
+        request.setElectionId(300L);
         return request;
     }
 

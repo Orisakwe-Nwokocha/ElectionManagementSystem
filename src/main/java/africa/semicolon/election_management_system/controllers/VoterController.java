@@ -18,13 +18,13 @@ public class VoterController {
     private final VoterService voterService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerVoter(@ModelAttribute CreateVoterRequest createVoterRequest){
+    public ResponseEntity<?> registerVoter(@RequestBody CreateVoterRequest createVoterRequest){
         return ResponseEntity.status(CREATED)
                 .body(voterService.registerVoter(createVoterRequest));
     }
 
     @PostMapping("/cast-vote")
-    public ResponseEntity<?> castVote(@ModelAttribute CastVoteRequest request){
+    public ResponseEntity<?> castVote(@RequestBody CastVoteRequest request){
         return ResponseEntity.ok(voterService.castVote(request));
     }
 

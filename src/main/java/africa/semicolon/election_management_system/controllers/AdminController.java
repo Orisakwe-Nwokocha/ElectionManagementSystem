@@ -6,10 +6,7 @@ import africa.semicolon.election_management_system.dtos.requests.ScheduleElectio
 import africa.semicolon.election_management_system.services.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -22,13 +19,13 @@ public class AdminController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerAdmin(@ModelAttribute RegisterAdminRequest registerAdminRequest) {
+    public ResponseEntity<?> registerAdmin(@RequestBody RegisterAdminRequest registerAdminRequest) {
         return ResponseEntity.status(CREATED)
                 .body(adminService.register(registerAdminRequest));
     }
 
     @PostMapping("/schedule-election")
-    public ResponseEntity<?> scheduleElection(@ModelAttribute ScheduleElectionRequest scheduleElectionRequest) {
+    public ResponseEntity<?> scheduleElection(@RequestBody ScheduleElectionRequest scheduleElectionRequest) {
         return ResponseEntity.status(CREATED)
                 .body(adminService.schedule(scheduleElectionRequest));
     }
