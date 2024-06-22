@@ -18,10 +18,10 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RequestMapping("/ap1/v1/candidate")
 @RestController
-public class candidateController {
+public class CandidateController {
     private final CandidateService candidaService;
 
-    public candidateController(CandidateService candidaService) {
+    public CandidateController(CandidateService candidaService) {
         this.candidaService = candidaService;
     }
 
