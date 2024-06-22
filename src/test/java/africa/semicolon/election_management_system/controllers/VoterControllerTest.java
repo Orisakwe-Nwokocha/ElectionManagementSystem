@@ -3,7 +3,6 @@ package africa.semicolon.election_management_system.controllers;
 import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
-import africa.semicolon.election_management_system.services.VoterServiceTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static africa.semicolon.election_management_system.utils.TestUtils.buildCreateVoterRequest;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -29,7 +29,7 @@ public class VoterControllerTest {
 
     @Test
     public void testRegisterVoter() throws Exception {
-        CreateVoterRequest request = VoterServiceTest.buildCreateVoterRequest();
+        CreateVoterRequest request = buildCreateVoterRequest();
         ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(post("/api/v1/voter/register")
                         .contentType(MediaType.APPLICATION_JSON)

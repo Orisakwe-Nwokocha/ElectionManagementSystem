@@ -7,17 +7,13 @@ import africa.semicolon.election_management_system.dtos.responses.DeleteCandidat
 import africa.semicolon.election_management_system.dtos.responses.RegisterCandidateResponse;
 import africa.semicolon.election_management_system.dtos.responses.UpdateCandidateResponse;
 import africa.semicolon.election_management_system.services.CandidateService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RequestMapping("/ap1/v1/candidate")
 @RestController
+@RequestMapping("/api/v1/candidate")
 public class CandidateController {
     private final CandidateService candidaService;
 
@@ -25,21 +21,21 @@ public class CandidateController {
         this.candidaService = candidaService;
     }
 
-    @PostMapping("/registerCandidate")
+    @PostMapping("/register")
     public ResponseEntity<RegisterCandidateResponse> registerCandidate(@ModelAttribute RegisterCandidateRequest registerCandidateRequest){
         return ResponseEntity.status(CREATED)
                 .body(candidaService.registerCandidate(registerCandidateRequest));
     }
 
-    @PostMapping("/deleteCandidate")
+    @DeleteMapping("/delete")
     public ResponseEntity<DeleteCandidateResponse> deleteCandidate(@ModelAttribute DeleteCandidateRequest deleteCandidateRequest){
-        return ResponseEntity.status(HttpStatus.OK)
-               .body(candidaService.deleteCandidate(deleteCandidateRequest));
+        return ResponseEntity.ok()
+                .body(candidaService.deleteCandidate(deleteCandidateRequest));
     }
 
-    @PostMapping("/updateCandidate")
+    @PatchMapping("/update")
     public ResponseEntity<UpdateCandidateResponse> updateCandidate(@ModelAttribute UpdateCandidateRequest updateCandidateRequest){
-        return ResponseEntity.status(HttpStatus.OK)
-               .body(candidaService.updateCandidate(updateCandidateRequest));
+        return ResponseEntity.ok()
+                .body(candidaService.updateCandidate(updateCandidateRequest));
     }
 }

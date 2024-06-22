@@ -24,9 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDate;
 import java.util.List;
 
+import static africa.semicolon.election_management_system.utils.TestUtils.*;
 import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -144,36 +144,6 @@ public class VoterServiceTest {
         election.setStartDate(now().minusDays(1));
         election.setEndDate(now().plusDays(1));
         electionRepository.save(election);
-    }
-
-    private static CastVoteRequest buildCastVoteRequest() {
-        CastVoteRequest castVoteRequest = new CastVoteRequest();
-        castVoteRequest.setVotingId(654321L);
-        castVoteRequest.setCandidateId(400L);
-        castVoteRequest.setElectionId(301L);
-        return castVoteRequest;
-    }
-
-    public static CreateVoterRequest buildCreateVoterRequest() {
-        CreateVoterRequest request = new CreateVoterRequest();
-        request.setName("John Doe");
-        request.setPassword("password");
-        request.setAddress("123 Main St");
-        request.setIdentificationNumber("34567891");
-        request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setStateOfOrigin("Lagos");
-        return request;
-    }
-
-    private static CreateVoterRequest buildCreateIneligibleVoterRequest() {
-        CreateVoterRequest request = new CreateVoterRequest();
-        request.setName("John Doe");
-        request.setPassword("password");
-        request.setAddress("123 Main St");
-        request.setIdentificationNumber("34567891");
-        request.setDateOfBirth(LocalDate.of(2008, 1, 1));
-        request.setStateOfOrigin("Lagos");
-        return request;
     }
 
 

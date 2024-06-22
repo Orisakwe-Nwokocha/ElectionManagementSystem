@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDate;
-
-import static africa.semicolon.election_management_system.data.constants.Category.NATIONAL;
+import static africa.semicolon.election_management_system.utils.TestUtils.buildCandidateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -30,7 +28,7 @@ class CandidateServiceTest {
 
     @Test
     public void registerCandidateTest() {
-        RegisterCandidateRequest request = buildRequest();
+        RegisterCandidateRequest request = buildCandidateRequest();
         request.setElectionId(300L);
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
         System.out.println(response);
@@ -41,7 +39,7 @@ class CandidateServiceTest {
     @Test
     @DisplayName("test that candidate cannot register outside a scheduled election")
     public void registerCandidateTest2() {
-        RegisterCandidateRequest request = buildRequest();
+        RegisterCandidateRequest request = buildCandidateRequest();
         assertThrows(ResourceNotFoundException.class, ()-> candidateService.registerCandidate(request));
         request.setElectionId(200L);
         assertThrows(ResourceNotFoundException.class, ()-> candidateService.registerCandidate(request));
@@ -49,7 +47,7 @@ class CandidateServiceTest {
 
     @Test
     public void deleteCandidateTest(){
-        RegisterCandidateRequest request = buildRequest();
+        RegisterCandidateRequest request = buildCandidateRequest();
         request.setElectionId(300L);
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
         assertThat(response).isNotNull();
@@ -64,9 +62,9 @@ class CandidateServiceTest {
 
     @Test
     public void updateCandidateTest(){
-        RegisterCandidateRequest registerCandidateRequest = buildRequest();
+        RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
         registerCandidateRequest.setElectionId(301L);
-        buildRequest().setIdentificationNumber("4865389087");
+        buildCandidateRequest().setIdentificationNumber("4865389087");
         RegisterCandidateResponse registerCandidateResponse = candidateService.registerCandidate(registerCandidateRequest);
         assertThat(registerCandidateResponse).isNotNull();
         assertThat(registerCandidateResponse.getMessage()).isEqualTo("Candidate registered successfully");
@@ -85,16 +83,4 @@ class CandidateServiceTest {
         assertThat(registeredCandidate.getName()).isEqualTo(updateCandidateRequest.getName());
     }
 
-    private static RegisterCandidateRequest buildRequest() {
-        RegisterCandidateRequest request = new RegisterCandidateRequest();
-        request.setName("John");
-        request.setAddress("no 29 adewale str");
-        request.setIdentificationNumber("12343487443");
-        request.setPassword("password");
-        request.setDateOfBirth(LocalDate.of(1980, 10, 2));
-        request.setPartyAffiliation("P.D.P");
-        request.setPositionContested(NATIONAL);
-        request.setStateOfOrigin("Benue");
-        return request;
-    }
 }

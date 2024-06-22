@@ -33,7 +33,7 @@ class AdminControllerTest {
         RegisterAdminRequest registerAdminRequest = new RegisterAdminRequest();
         registerAdminRequest.setUsername("Testing@One");
         registerAdminRequest.setPassword("password");
-        mockMvc.perform(post("/api/v1/admin")
+        mockMvc.perform(post("/api/v1/admin/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(registerAdminRequest)))
                 .andExpect(status().isCreated())
@@ -48,7 +48,7 @@ class AdminControllerTest {
         scheduleElectionRequest.setCategory(Category.LGA);
         scheduleElectionRequest.setStartDate(LocalDateTime.of(2024, SEPTEMBER, 19, 12, 0));
         scheduleElectionRequest.setEndDate(LocalDateTime.of(2024, SEPTEMBER, 21, 12, 0));
-        mockMvc.perform(post("/api/v1/admin/scheduleElection")
+        mockMvc.perform(post("/api/v1/admin/schedule-election")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scheduleElectionRequest)))
                 .andExpect(status().isCreated())

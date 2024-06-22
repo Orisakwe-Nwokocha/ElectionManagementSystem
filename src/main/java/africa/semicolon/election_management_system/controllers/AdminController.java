@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -23,14 +21,14 @@ public class AdminController {
     private final AdminService adminService;
 
 
-    @PostMapping
-    public ResponseEntity<?> registerAdmin(@ModelAttribute RegisterAdminRequest registerAdminRequest) throws IOException {
+    @PostMapping("/register")
+    public ResponseEntity<?> registerAdmin(@ModelAttribute RegisterAdminRequest registerAdminRequest) {
         return ResponseEntity.status(CREATED)
                 .body(adminService.register(registerAdminRequest));
     }
 
-    @PostMapping("/scheduleElection")
-    public ResponseEntity<?> scheduleElection(@ModelAttribute ScheduleElectionRequest scheduleElectionRequest) throws IOException {
+    @PostMapping("/schedule-election")
+    public ResponseEntity<?> scheduleElection(@ModelAttribute ScheduleElectionRequest scheduleElectionRequest) {
         return ResponseEntity.status(CREATED)
                 .body(adminService.schedule(scheduleElectionRequest));
     }

@@ -14,11 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.jdbc.Sql;
+
+import static africa.semicolon.election_management_system.utils.TestUtils.buildCandidateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.time.LocalDate;
-
-import static africa.semicolon.election_management_system.data.constants.Category.NATIONAL;
 
 import java.time.LocalDateTime;
 
@@ -85,7 +84,7 @@ class AdminServiceImplTest {
 
     @Test
     public void registerCandidateTest() {
-        RegisterCandidateRequest request = buildRequest();
+        RegisterCandidateRequest request = buildCandidateRequest();
         request.setElectionId(300L);
         RegisterCandidateResponse response = adminService.registerCandidate(request);
         assertNotNull(response);
@@ -95,7 +94,7 @@ class AdminServiceImplTest {
     @Test
     @DisplayName("test that candidate cannot register outside a scheduled election")
     public void registerCandidateTest2() {
-        RegisterCandidateRequest request = buildRequest();
+        RegisterCandidateRequest request = buildCandidateRequest();
         assertThrows(ResourceNotFoundException.class, ()-> adminService.registerCandidate(request));
         request.setElectionId(200L);
         assertThrows(ResourceNotFoundException.class, ()-> adminService.registerCandidate(request));
@@ -103,7 +102,7 @@ class AdminServiceImplTest {
 
     @Test
     public void deleteCandidateTest() {
-        RegisterCandidateRequest request = buildRequest();
+        RegisterCandidateRequest request = buildCandidateRequest();
         request.setElectionId(300L);
         RegisterCandidateResponse response = adminService.registerCandidate(request);
         assertThat(response).isNotNull();
@@ -120,9 +119,9 @@ class AdminServiceImplTest {
 
     @Test
     public void updateCandidateTest(){
-        RegisterCandidateRequest registerCandidateRequest = buildRequest();
+        RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
         registerCandidateRequest.setElectionId(301L);
-        buildRequest().setIdentificationNumber("4865389087");
+        buildCandidateRequest().setIdentificationNumber("4865389087");
         RegisterCandidateResponse registerCandidateResponse = adminService.registerCandidate(registerCandidateRequest);
         assertThat(registerCandidateResponse).isNotNull();
         assertThat(registerCandidateResponse.getMessage()).isEqualTo("Candidate registered successfully");
@@ -140,17 +139,5 @@ class AdminServiceImplTest {
         assertThat(registeredCandidate.getName()).isEqualTo(updateCandidateRequest.getName());
     }
 
-    private static RegisterCandidateRequest buildRequest() {
-        RegisterCandidateRequest request = new RegisterCandidateRequest();
-        request.setName("John");
-        request.setAddress("no 29 adewale str");
-        request.setIdentificationNumber("12343487443");
-        request.setPassword("password");
-        request.setDateOfBirth(LocalDate.of(1980, 10, 2));
-        request.setPartyAffiliation("P.D.P");
-        request.setPositionContested(NATIONAL);
-        request.setStateOfOrigin("Benue");
-        return request;
-    }
 
 }

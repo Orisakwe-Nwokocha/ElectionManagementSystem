@@ -1,6 +1,5 @@
 package africa.semicolon.election_management_system.controllers;
 
-import africa.semicolon.election_management_system.data.constants.Category;
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -11,9 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
+import static africa.semicolon.election_management_system.utils.TestUtils.buildCandidateRequest;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,7 +27,7 @@ public class CandidateControllerTest {
     @Test
     void testRegisterCandidateTest() throws Exception {
         final RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
-        mockMvc.perform(post("/api/v1/registerCandidate")
+        mockMvc.perform(post("/api/v1/candidate/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(registerCandidateRequest)))
                 .andExpect(status().isCreated())
@@ -39,26 +37,11 @@ public class CandidateControllerTest {
     @Test
     public  void deleteCandidateTest() throws Exception {
         RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
-        mockMvc.perform(post("/api/v1/deleteCandidate")
+        mockMvc.perform(delete("/api/v1/candidate/delete")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(registerCandidateRequest)))
                 .andExpect(status().isCreated())
                 .andDo(print());
     }
 
-    private static RegisterCandidateRequest buildCandidateRequest() {
-        String dateOfBirth = "2024-06-21";
-        RegisterCandidateRequest registerCandidateRequest = new RegisterCandidateRequest();
-        registerCandidateRequest.setName("Adewale");
-        registerCandidateRequest.setPassword("password");
-        registerCandidateRequest.setIdentificationNumber("401104");
-        registerCandidateRequest.setAddress("123 Main St");
-        registerCandidateRequest.setDateOfBirth(LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        registerCandidateRequest.setStateOfOrigin("Lagos");
-        registerCandidateRequest.setElectionId(301L);
-        registerCandidateRequest.setPositionContested(Category.NATIONAL);
-        registerCandidateRequest.setPartyAffiliation("P.D.P");
-        registerCandidateRequest.setVotingId(401104L);
-        return registerCandidateRequest;
-    }
 }
