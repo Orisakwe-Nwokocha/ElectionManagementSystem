@@ -14,8 +14,6 @@ public interface CandidateService {
     RegisterCandidateResponse registerCandidate(RegisterCandidateRequest request);
     Candidate getCandidateBy(Long id);
     List<Candidate> getCandidatesFor(Long electionId);
-
     DeleteCandidateResponse deleteCandidate(DeleteCandidateRequest deleteCandidateRequest);
-
     UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest);
 }

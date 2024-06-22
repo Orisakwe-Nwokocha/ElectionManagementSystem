@@ -1,18 +1,21 @@
 package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Admin;
+import africa.semicolon.election_management_system.data.models.Candidate;
 import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
+import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
-import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
-import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
-import africa.semicolon.election_management_system.dtos.responses.RegisterAdminResponse;
-import africa.semicolon.election_management_system.dtos.responses.ScheduleElectionResponse;
+import africa.semicolon.election_management_system.data.repositories.VoterRepository;
+import africa.semicolon.election_management_system.dtos.requests.*;
+import africa.semicolon.election_management_system.dtos.responses.*;
 import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 import static java.time.LocalDateTime.now;
 
@@ -22,11 +25,16 @@ AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;
+    private final CandidateService candidateService;
+
+    private final CandidateRepository candidateRepository;
     private final ModelMapper modelMapper;
 
-    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, ModelMapper modelMapper) {
+    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, CandidateService candidateService, CandidateRepository candidateRepository, ModelMapper modelMapper) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
+        this.candidateService = candidateService;
+        this.candidateRepository = candidateRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -51,6 +59,43 @@ AdminServiceImpl implements AdminService {
         electionResponse.setMessage("Election scheduled successfully");
         return electionResponse;
     }
+
+    @Override
+    public RegisterCandidateResponse registerCandidate(RegisterCandidateRequest request) {
+        return candidateService.registerCandidate(request);
+    }
+
+    @Override
+    public Candidate getCandidateBy(Long id) {
+        return candidateService.getCandidateBy(id);
+    }
+
+    @Override
+    public List<Candidate> getCandidatesFor(Long electionId) {
+        return candidateService.getCandidatesFor(electionId);
+    }
+    @Override
+    public DeleteCandidateResponse deleteCandidate(Candidate candidate) {
+        return getDeleteCandidateResponse(candidate);
+    }
+    private DeleteCandidateResponse getDeleteCandidateResponse(Candidate candidate) {
+        if (candidate == null) {
+            DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
+            deleteCandidateResponse.setMessage("Candidate not found");
+            return deleteCandidateResponse;
+        }
+        candidateRepository.delete(candidate);
+        DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
+        deleteCandidateResponse.setMessage("Candidate deleted successfully");
+        return deleteCandidateResponse;
+    }
+
+
+    @Override
+    public UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest) {
+        return candidateService.updateCandidate(updateCandidateRequest);
+    }
+
 
     @Override
     public Admin getAdminBy(Long id) {
