@@ -70,6 +70,7 @@ public class ElectionServiceImpl implements ElectionService {
             String token = tokenService.generateToken(authentication);
             response.setToken(token);
             response.setTokenExpirationDate(now().plusHours(1));
+            response.setType("Bearer");
             log.info("User logged in successfully with unique identifier: {}", request.getUniqueIdentifier());
             return response;
         } catch (AuthenticationException e) {
