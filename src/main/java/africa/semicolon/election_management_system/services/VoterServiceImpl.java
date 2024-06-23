@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -31,6 +32,7 @@ import static africa.semicolon.election_management_system.data.constants.Role.VO
 import static java.time.LocalDateTime.now;
 
 @Service
+@Slf4j
 public class VoterServiceImpl implements VoterService{
 
     private final VoterRepository voterRepository;
@@ -111,17 +113,22 @@ public class VoterServiceImpl implements VoterService{
 
     @Override
     public CastVoteResponse castVote(CastVoteRequest castVoteRequest) {
+        log.info("Cast vote method called with voting id: {}", castVoteRequest.getVotingId());
+        Voter voter = getVoterByVotingId(castVoteRequest.getVotingId());
         Election election = electionService.getElectionBy(castVoteRequest.getElectionId());
         Candidate candidate = candidateService.getCandidateBy(castVoteRequest.getCandidateId());
-        validate(election, candidate);
-        Long votingId = castVoteRequest.getVotingId();
-        Voter voter = getVoterByVotingId(votingId);
-        validate(voter, election);
+        validate(election, candidate, voter);
         Vote newVote = buildVote(voter, candidate, election);
         newVote = voteRepository.save(newVote);
         CastVoteResponse response = modelMapper.map(newVote, CastVoteResponse.class);
         response.setMessage("Voting casted successfully");
+        log.info("Vote casted successfully with voting id: {}", castVoteRequest.getVotingId());
         return response;
+    }
+
+    private void validate(Election election, Candidate candidate, Voter voter) {
+        validate(election, candidate);
+        validate(voter, election);
     }
 
     private void validate(Voter voter, Election election) {

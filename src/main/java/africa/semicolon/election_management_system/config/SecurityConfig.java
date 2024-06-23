@@ -59,7 +59,6 @@ public class SecurityConfig {
                 .httpBasic(withDefaults())
                 .build();
     }
-
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
@@ -81,5 +80,4 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
-
 }

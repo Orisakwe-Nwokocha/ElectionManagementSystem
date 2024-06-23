@@ -7,5 +7,4 @@ import lombok.Setter;
 @Getter
 public class DeleteCandidateRequest {
     private Long Id;
-    private String identificationNumber;
 }

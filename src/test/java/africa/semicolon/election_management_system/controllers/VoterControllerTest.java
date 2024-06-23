@@ -55,7 +55,7 @@ public class VoterControllerTest {
         request.setElectionId(301L);
         request.setCandidateId(400L);
         updateElection();
-        String token = authUtils.getToken();
+        String token = authUtils.getToken("123451");
         mockMvc.perform(post("/api/v1/voter/cast-vote")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,11 +70,13 @@ public class VoterControllerTest {
         String jsonPatch = "[{\"op\":\"replace\",\"path\":\"/address\",\"value\":\"4 Afolabi street\"}]";
         UpdateVoterResponse response = new UpdateVoterResponse();
         response.setAddress("");
+        String token = authUtils.getToken("123451");
         mockMvc.perform(patch("/api/v1/voter/update/{votingId}", votingId)
+                        .header("Authorization", "Bearer " + token)
                         .contentType("application/json-patch+json")
                         .content(jsonPatch))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.address").value("4 Afolabi street"))
+                .andExpect(jsonPath("$.data..address").value("4 Afolabi street"))
                 .andDo(print());
 
 

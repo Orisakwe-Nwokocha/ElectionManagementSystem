@@ -19,6 +19,7 @@ public class UserDetailsImpl implements UserDetails {
     private Long id;
     private String username;
     private String password;
+    @Getter
     private List<String> roles;
 
     public UserDetailsImpl(Long id, String username, String password, List<String> roles) {
