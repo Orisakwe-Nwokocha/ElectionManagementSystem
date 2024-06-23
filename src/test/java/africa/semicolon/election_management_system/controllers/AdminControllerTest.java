@@ -52,13 +52,12 @@ class AdminControllerTest {
         scheduleElectionRequest.setCategory(Category.LGA);
         scheduleElectionRequest.setStartDate(LocalDateTime.of(2024, SEPTEMBER, 19, 12, 0));
         scheduleElectionRequest.setEndDate(LocalDateTime.of(2024, SEPTEMBER, 21, 12, 0));
-        String token = authUtils.getToken();
+        String token = authUtils.getToken("username");
         mockMvc.perform(post("/api/v1/admin/schedule-election")
-                .header("Authorization", "Bearer " + token)
-                .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scheduleElectionRequest)))
                 .andExpect(status().isCreated())
                 .andDo(print());
     }
-
 }

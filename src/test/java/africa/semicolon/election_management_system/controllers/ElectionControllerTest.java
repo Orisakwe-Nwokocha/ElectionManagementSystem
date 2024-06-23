@@ -27,7 +27,7 @@ public class ElectionControllerTest {
 
     @Test
     public void whenAuthenticated_thenStatusIsOk() throws Exception {
-        mvc.perform(get("/api/v1/election"))
+        mvc.perform(get("/api/v1/election/all"))
                 .andExpect(status().isOk());
     }
 
@@ -51,5 +51,20 @@ public class ElectionControllerTest {
                 .andExpect(jsonPath("$.data.totalVotes").value(7))
                 .andDo(print());
 
+    }
+
+    @Test
+    public void getElectionTest() throws Exception {
+        mvc.perform(get("/api/v1/election/302"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.category").value("NATIONAL"))
+                .andDo(print());
+    }
+
+    @Test
+    public void getAllElectionsTest() throws Exception {
+        mvc.perform(get("/api/v1/election/all"))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 }

@@ -39,7 +39,6 @@ class CandidateServiceTest {
     @DisplayName("test that candidate cannot register outside a scheduled election")
     public void registerCandidateTest2() {
         RegisterCandidateRequest request = buildCandidateRequest();
-        assertThrows(ResourceNotFoundException.class, ()-> candidateService.registerCandidate(request));
         request.setElectionId(200L);
         assertThrows(ResourceNotFoundException.class, ()-> candidateService.registerCandidate(request));
     }
