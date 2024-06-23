@@ -37,6 +37,7 @@ public class ElectionServiceTest {
         var response = electionService.viewElectionResults(302L);
         System.out.println(response);
         assertThat(response).isNotNull();
+        assertThat(response.getTotalVotes()).isEqualTo(7);
         assertThat(response.getCandidateResultResponses()).hasSize(3);
     }
 }

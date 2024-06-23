@@ -6,13 +6,13 @@ import africa.semicolon.election_management_system.data.models.Election;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
 import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
-import africa.semicolon.election_management_system.data.repositories.VoterRepository;
 import africa.semicolon.election_management_system.dtos.requests.*;
 import africa.semicolon.election_management_system.dtos.responses.*;
 import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,13 +29,17 @@ AdminServiceImpl implements AdminService {
 
     private final CandidateRepository candidateRepository;
     private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
-    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository, CandidateService candidateService, CandidateRepository candidateRepository, ModelMapper modelMapper) {
+    public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository,
+                            CandidateService candidateService, CandidateRepository candidateRepository,
+                            ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
         this.candidateService = candidateService;
         this.candidateRepository = candidateRepository;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -44,6 +48,7 @@ AdminServiceImpl implements AdminService {
         validate(username);
         request.setUsername(username.toLowerCase());
         Admin admin = modelMapper.map(request, Admin.class);
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
         admin = adminRepository.save(admin);
         var adminResponse = modelMapper.map(admin, RegisterAdminResponse.class);
         adminResponse.setMessage("User registered successfully");

@@ -22,19 +22,19 @@ public class CandidateController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterCandidateResponse> registerCandidate(@ModelAttribute RegisterCandidateRequest registerCandidateRequest){
+    public ResponseEntity<RegisterCandidateResponse> registerCandidate(@RequestBody RegisterCandidateRequest registerCandidateRequest){
         return ResponseEntity.status(CREATED)
                 .body(candidaService.registerCandidate(registerCandidateRequest));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<DeleteCandidateResponse> deleteCandidate(@ModelAttribute DeleteCandidateRequest deleteCandidateRequest){
+    public ResponseEntity<DeleteCandidateResponse> deleteCandidate(@RequestBody DeleteCandidateRequest deleteCandidateRequest){
         return ResponseEntity.ok()
                 .body(candidaService.deleteCandidate(deleteCandidateRequest));
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<UpdateCandidateResponse> updateCandidate(@ModelAttribute UpdateCandidateRequest updateCandidateRequest){
+    public ResponseEntity<UpdateCandidateResponse> updateCandidate(@RequestBody UpdateCandidateRequest updateCandidateRequest){
         return ResponseEntity.ok()
                 .body(candidaService.updateCandidate(updateCandidateRequest));
     }

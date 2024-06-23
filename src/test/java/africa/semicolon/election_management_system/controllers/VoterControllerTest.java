@@ -1,8 +1,10 @@
 package africa.semicolon.election_management_system.controllers;
 
+import africa.semicolon.election_management_system.data.repositories.ElectionRepository;
 import africa.semicolon.election_management_system.dtos.requests.CastVoteRequest;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.responses.UpdateVoterResponse;
+import africa.semicolon.election_management_system.utils.AuthUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static africa.semicolon.election_management_system.utils.TestUtils.buildCreateVoterRequest;
+import static java.time.LocalDateTime.now;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -26,6 +29,12 @@ public class VoterControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private ElectionRepository electionRepository;
+
+    @Autowired
+    private AuthUtils authUtils;
 
     @Test
     public void testRegisterVoter() throws Exception {
@@ -45,7 +54,10 @@ public class VoterControllerTest {
         request.setVotingId(654321L);
         request.setElectionId(301L);
         request.setCandidateId(400L);
-        mockMvc.perform(post("/api/v1/voter")
+        updateElection();
+        String token = authUtils.getToken();
+        mockMvc.perform(post("/api/v1/voter/cast-vote")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(request)))
                 .andExpect(status().is2xxSuccessful())
@@ -66,5 +78,12 @@ public class VoterControllerTest {
                 .andDo(print());
 
 
+    }
+
+    private void updateElection() {
+        var election = electionRepository.findById(301L).orElseThrow();
+        election.setStartDate(now().minusDays(1));
+        election.setEndDate(now().plusDays(1));
+        electionRepository.save(election);
     }
 }

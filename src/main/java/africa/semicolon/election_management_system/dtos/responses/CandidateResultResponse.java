@@ -17,5 +17,5 @@ public class CandidateResultResponse {
     private String partyAffiliation;
     @JsonProperty("position_contested")
     private String positionContested;
-    private Long numberOfVotes;
+    private int numberOfVotes;
 }

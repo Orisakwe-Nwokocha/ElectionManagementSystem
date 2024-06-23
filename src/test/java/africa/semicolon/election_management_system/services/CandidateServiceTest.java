@@ -29,7 +29,6 @@ class CandidateServiceTest {
     @Test
     public void registerCandidateTest() {
         RegisterCandidateRequest request = buildCandidateRequest();
-        request.setElectionId(300L);
         RegisterCandidateResponse response = candidateService.registerCandidate(request);
         System.out.println(response);
         assertThat(response).isNotNull();
