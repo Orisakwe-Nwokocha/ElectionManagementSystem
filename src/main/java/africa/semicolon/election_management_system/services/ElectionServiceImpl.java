@@ -24,6 +24,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+
 @Service
 @Slf4j
 public class ElectionServiceImpl implements ElectionService {
@@ -63,12 +65,11 @@ public class ElectionServiceImpl implements ElectionService {
                             request.getUniqueIdentifier().toLowerCase(), request.getPassword()));
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            System.out.println("user object: " + userDetails);
-            log.info("user object: {}", userDetails);
             LoginResponse response = modelMapper.map(userDetails, LoginResponse.class);
-            response.setMessage("Login successful");
+            response.setMessage("User logged in successfully");
             String token = tokenService.generateToken(authentication);
             response.setToken(token);
+            response.setTokenExpirationDate(now().plusHours(1));
             log.info("User logged in successfully with unique identifier: {}", request.getUniqueIdentifier());
             return response;
         } catch (AuthenticationException e) {
