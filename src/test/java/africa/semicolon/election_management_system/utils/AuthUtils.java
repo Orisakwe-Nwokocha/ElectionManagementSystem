@@ -12,9 +12,9 @@ public class AuthUtils {
     @Autowired
     private ElectionService electionService;
 
-    public String getToken()  {
+    public String getToken(String uniqueIdentifier)  {
         LoginRequest request = new LoginRequest();
-        request.setUniqueIdentifier("123451");
+        request.setUniqueIdentifier(uniqueIdentifier);
         request.setPassword("password");
         var response = electionService.login(request);
         return response.getToken();

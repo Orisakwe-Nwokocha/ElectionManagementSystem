@@ -10,8 +10,10 @@ import africa.semicolon.election_management_system.dtos.requests.*;
 import africa.semicolon.election_management_system.dtos.responses.*;
 import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
+import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import com.github.fge.jsonpatch.JsonPatch;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,8 @@ import java.util.List;
 import static java.time.LocalDateTime.now;
 
 @Service
-public class
-AdminServiceImpl implements AdminService {
+@Slf4j
+public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;
@@ -59,12 +61,14 @@ AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ScheduleElectionResponse schedule(ScheduleElectionRequest request) {
+    public ScheduleElectionResponse scheduleElection(ScheduleElectionRequest request) {
+        log.info("Schedule election method called by admin");
         Election election = modelMapper.map(request, Election.class);
         election = electionRepository.save(election);
         var electionResponse = modelMapper.map(election, ScheduleElectionResponse.class);
         electionResponse.setTimeCreated(now());
         electionResponse.setMessage("Election scheduled successfully");
+        log.info("Election scheduled successfully by admin");
         return electionResponse;
     }
 
@@ -82,33 +86,36 @@ AdminServiceImpl implements AdminService {
     public List<Candidate> getCandidatesFor(Long electionId) {
         return candidateService.getCandidatesFor(electionId);
     }
+
     @Override
-    public DeleteCandidateResponse deleteCandidate(Candidate candidate) {
-        return getDeleteCandidateResponse(candidate);
-    }
-    private DeleteCandidateResponse getDeleteCandidateResponse(Candidate candidate) {
-        if (candidate == null) {
-            DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
-            deleteCandidateResponse.setMessage("Candidate not found");
-            return deleteCandidateResponse;
-        }
+    public DeleteCandidateResponse deleteCandidate(Long candidateId) {
+        Candidate candidate = getCandidateBy(candidateId);
         candidateRepository.delete(candidate);
         DeleteCandidateResponse deleteCandidateResponse = new DeleteCandidateResponse();
         deleteCandidateResponse.setMessage("Candidate deleted successfully");
         return deleteCandidateResponse;
     }
 
-
     @Override
     public UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest) {
         return candidateService.updateCandidate(updateCandidateRequest);
     }
 
-
     @Override
     public Admin getAdminBy(Long id) {
         return adminRepository.findById(id)
                 .orElseThrow(()-> new AdminNotFoundException("Admin not found"));
+    }
+
+    @Override
+    public UpdateVoterResponse updateVoterAsAdmin(Long votingId, JsonPatch jsonPatch) {
+        return voterService.updateVoter(votingId, jsonPatch);
+    }
+
+    @Override
+    public void validateAdmin(String username) {
+        boolean usernameExists = adminRepository.existsByUsername(username.toLowerCase());
+        if (!usernameExists) throw new UnauthorizedException("You are not authorized to perform this operation");
     }
 
     private void validate(String username) {
@@ -117,10 +124,6 @@ AdminServiceImpl implements AdminService {
         }
         boolean usernameExists = adminRepository.existsByUsername(username.toLowerCase());
         if (usernameExists) throw new UsernameExistsException("Username already taken");
-    }
-    @Override
-    public UpdateVoterResponse updateVoterAsAdmin(Long votingId, JsonPatch jsonPatch) {
-        return voterService.updateVoter(votingId, jsonPatch);
     }
 
 }

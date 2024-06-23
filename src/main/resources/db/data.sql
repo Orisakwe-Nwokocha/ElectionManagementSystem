@@ -18,7 +18,7 @@ INSERT INTO voters(id, name, identification_number, password, address, date_of_b
 (106, 'Jon Doe', '123452', 'password', 'address', '1984-01-12', 'Kogi', true, 654327, 'VOTER', '2023-01-01T00:00:00');
 
 INSERT INTO admin(id, address, username, password, role, date_registered) VALUES
-(200, 'address', 'username', 'password', 'ADMIN', '2024-06-04T15:03:03.792009700');
+(200, 'address', 'username', '$2a$10$liFcMrm6W5tZBDxbMlkfUeajKXhthr.U8R5znNKhXygrInpnmW6we', 'ADMIN', '2024-06-04T15:03:03.792009700');
 
 INSERT INTO elections(id, title, category, start_date, end_date) VALUES
 (300, 'title', 'LGA', '2024-06-04T15:03:03.792009700', '2024-06-19 12:00:00.000000'),

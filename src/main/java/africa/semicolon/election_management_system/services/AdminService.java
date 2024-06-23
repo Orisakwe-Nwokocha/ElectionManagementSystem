@@ -10,12 +10,13 @@ import java.util.List;
 
 public interface AdminService {
     RegisterAdminResponse register(RegisterAdminRequest request);
-    ScheduleElectionResponse schedule(ScheduleElectionRequest request);
+    ScheduleElectionResponse scheduleElection(ScheduleElectionRequest request);
     RegisterCandidateResponse registerCandidate(RegisterCandidateRequest request);
     Candidate getCandidateBy(Long id);
     List<Candidate> getCandidatesFor(Long electionId);
-    DeleteCandidateResponse deleteCandidate(Candidate candidate);
+    DeleteCandidateResponse deleteCandidate(Long candidateId);
     UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest);
     Admin getAdminBy(Long id);
     UpdateVoterResponse updateVoterAsAdmin(Long votingId, JsonPatch jsonPatch);
+    void validateAdmin(String username);
 }

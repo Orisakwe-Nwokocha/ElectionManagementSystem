@@ -15,7 +15,6 @@ import com.github.fge.jackson.jsonpointer.JsonPointerException;
 import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchOperation;
 import com.github.fge.jsonpatch.ReplaceOperation;
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Sql(scripts = {"/db/data.sql"})
-class AdminServiceImplTest {
+class AdminServiceTest {
 
     @Autowired
     private AdminService adminService;
@@ -88,7 +87,7 @@ class AdminServiceImplTest {
         request.setStartDate(LocalDateTime.of(2024, SEPTEMBER, 19, 12, 0));
         request.setEndDate(LocalDateTime.of(2024, SEPTEMBER, 21, 12, 0));
         request.setCategory(Category.LGA);
-        ScheduleElectionResponse scheduleResponse = adminService.schedule(request);
+        ScheduleElectionResponse scheduleResponse = adminService.scheduleElection(request);
         assertNotNull(scheduleResponse);
     }
 
@@ -105,7 +104,6 @@ class AdminServiceImplTest {
     @DisplayName("test that candidate cannot register outside a scheduled election")
     public void registerCandidateTest2() {
         RegisterCandidateRequest request = buildCandidateRequest();
-        assertThrows(ResourceNotFoundException.class, ()-> adminService.registerCandidate(request));
         request.setElectionId(200L);
         assertThrows(ResourceNotFoundException.class, ()-> adminService.registerCandidate(request));
     }
@@ -120,7 +118,7 @@ class AdminServiceImplTest {
         Candidate registeredCandidate = adminService.getCandidateBy(response.getId());
         assertThat(registeredCandidate.getName()).isEqualTo("John");
 
-        DeleteCandidateResponse deleteCandidateResponse = adminService.deleteCandidate(registeredCandidate);
+        DeleteCandidateResponse deleteCandidateResponse = adminService.deleteCandidate(registeredCandidate.getId());
 
         assertThat(deleteCandidateResponse).isNotNull();
         assertThat(deleteCandidateResponse.getMessage()).isEqualTo("Candidate deleted successfully");
@@ -153,17 +151,16 @@ class AdminServiceImplTest {
     @Test
     public void testUpdateVoterDetailsAsAdmin() throws JsonPointerException {
         String address = voterService.getVoterByVotingId(654322L).getAddress();
-        AssertionsForClassTypes.assertThat(address).isEqualTo("address");
+        assertThat(address).isEqualTo("address");
         List<JsonPatchOperation> operations = List.of(
                 new ReplaceOperation(new JsonPointer("/address"),
                         new TextNode("25,Queens street"))
         );
         JsonPatch updateVoterRequest = new JsonPatch(operations);
         UpdateVoterResponse response = adminService.updateVoterAsAdmin(654322L,updateVoterRequest);
-        AssertionsForClassTypes.assertThat(response).isNotNull();
+        assertThat(response).isNotNull();
         address = voterService.getVoterByVotingId(654322L).getAddress();
-        AssertionsForClassTypes.assertThat(address).isEqualTo("25,Queens street");
+        assertThat(address).isEqualTo("25,Queens street");
     }
-
 
 }

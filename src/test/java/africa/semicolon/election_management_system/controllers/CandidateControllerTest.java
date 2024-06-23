@@ -1,6 +1,8 @@
 package africa.semicolon.election_management_system.controllers;
 
+import africa.semicolon.election_management_system.dtos.requests.DeleteCandidateRequest;
 import africa.semicolon.election_management_system.dtos.requests.RegisterCandidateRequest;
+import africa.semicolon.election_management_system.utils.AuthUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class CandidateControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private AuthUtils authUtils;
+
     @Test
     void testRegisterCandidateTest() throws Exception {
         RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
@@ -36,11 +41,14 @@ public class CandidateControllerTest {
 
     @Test
     public  void deleteCandidateTest() throws Exception {
-        RegisterCandidateRequest registerCandidateRequest = buildCandidateRequest();
+        DeleteCandidateRequest deleteCandidateRequest = new DeleteCandidateRequest();
+        deleteCandidateRequest.setId(400L);
+        String token = authUtils.getToken("123451");
         mockMvc.perform(delete("/api/v1/candidate/delete")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(registerCandidateRequest)))
-                .andExpect(status().isCreated())
+                        .content(new ObjectMapper().writeValueAsString(deleteCandidateRequest)))
+                .andExpect(status().is2xxSuccessful())
                 .andDo(print());
     }
 

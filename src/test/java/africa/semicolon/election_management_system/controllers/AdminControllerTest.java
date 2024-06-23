@@ -3,6 +3,7 @@ package africa.semicolon.election_management_system.controllers;
 import africa.semicolon.election_management_system.data.constants.Category;
 import africa.semicolon.election_management_system.dtos.requests.RegisterAdminRequest;
 import africa.semicolon.election_management_system.dtos.requests.ScheduleElectionRequest;
+import africa.semicolon.election_management_system.utils.AuthUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ class AdminControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private AuthUtils authUtils;
+
 
     @Test
     void testRegisterAdmin() throws Exception {
@@ -48,7 +52,9 @@ class AdminControllerTest {
         scheduleElectionRequest.setCategory(Category.LGA);
         scheduleElectionRequest.setStartDate(LocalDateTime.of(2024, SEPTEMBER, 19, 12, 0));
         scheduleElectionRequest.setEndDate(LocalDateTime.of(2024, SEPTEMBER, 21, 12, 0));
+        String token = authUtils.getToken("username");
         mockMvc.perform(post("/api/v1/admin/schedule-election")
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(scheduleElectionRequest)))
                 .andExpect(status().isCreated())
