@@ -54,5 +54,4 @@ class AdminControllerTest {
                 .andExpect(status().isCreated())
                 .andDo(print());
     }
-
 }

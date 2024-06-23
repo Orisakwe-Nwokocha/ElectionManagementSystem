@@ -11,6 +11,7 @@ import africa.semicolon.election_management_system.dtos.responses.*;
 import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
+import com.github.fge.jsonpatch.JsonPatch;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,17 +27,19 @@ AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final ElectionRepository electionRepository;
     private final CandidateService candidateService;
+    private final VoterService voterService;
 
     private final CandidateRepository candidateRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
     public AdminServiceImpl(AdminRepository adminRepository, ElectionRepository electionRepository,
-                            CandidateService candidateService, CandidateRepository candidateRepository,
+                            CandidateService candidateService, VoterService voterService, CandidateRepository candidateRepository,
                             ModelMapper modelMapper, PasswordEncoder passwordEncoder) {
         this.adminRepository = adminRepository;
         this.electionRepository = electionRepository;
         this.candidateService = candidateService;
+        this.voterService = voterService;
         this.candidateRepository = candidateRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
@@ -114,6 +117,10 @@ AdminServiceImpl implements AdminService {
         }
         boolean usernameExists = adminRepository.existsByUsername(username.toLowerCase());
         if (usernameExists) throw new UsernameExistsException("Username already taken");
+    }
+    @Override
+    public UpdateVoterResponse updateVoterAsAdmin(Long votingId, JsonPatch jsonPatch) {
+        return voterService.updateVoter(votingId, jsonPatch);
     }
 
 }

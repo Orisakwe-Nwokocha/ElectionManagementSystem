@@ -9,6 +9,13 @@ import africa.semicolon.election_management_system.dtos.responses.*;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import africa.semicolon.election_management_system.exceptions.ResourceNotFoundException;
+import com.fasterxml.jackson.databind.node.TextNode;
+import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.github.fge.jackson.jsonpointer.JsonPointerException;
+import com.github.fge.jsonpatch.JsonPatch;
+import com.github.fge.jsonpatch.JsonPatchOperation;
+import com.github.fge.jsonpatch.ReplaceOperation;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static java.time.Month.SEPTEMBER;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,6 +43,8 @@ class AdminServiceImplTest {
     private AdminService adminService;
     @Autowired
     private AdminRepository adminRepository;
+    @Autowired
+    private VoterService voterService;
 
     @Test
     void testAdminCanRegisterSuccessfully() {
@@ -137,6 +147,22 @@ class AdminServiceImplTest {
         assertThat(updateCandidateResponse.getMessage()).isEqualTo("Candidate updated successfully");
         registeredCandidate = adminService.getCandidateBy(updateCandidateResponse.getId());
         assertThat(registeredCandidate.getName()).isEqualTo(updateCandidateRequest.getName());
+
+    }
+
+    @Test
+    public void testUpdateVoterDetailsAsAdmin() throws JsonPointerException {
+        String address = voterService.getVoterByVotingId(654322L).getAddress();
+        AssertionsForClassTypes.assertThat(address).isEqualTo("address");
+        List<JsonPatchOperation> operations = List.of(
+                new ReplaceOperation(new JsonPointer("/address"),
+                        new TextNode("25,Queens street"))
+        );
+        JsonPatch updateVoterRequest = new JsonPatch(operations);
+        UpdateVoterResponse response = adminService.updateVoterAsAdmin(654322L,updateVoterRequest);
+        AssertionsForClassTypes.assertThat(response).isNotNull();
+        address = voterService.getVoterByVotingId(654322L).getAddress();
+        AssertionsForClassTypes.assertThat(address).isEqualTo("25,Queens street");
     }
 
 

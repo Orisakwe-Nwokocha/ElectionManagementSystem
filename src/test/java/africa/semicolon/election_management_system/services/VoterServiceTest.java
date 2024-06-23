@@ -146,5 +146,4 @@ public class VoterServiceTest {
         electionRepository.save(election);
     }
 
-
 }
