@@ -1,4 +1,4 @@
-package africa.semicolon.election_management_system.security;
+package africa.semicolon.election_management_system.security.services;
 
 import africa.semicolon.election_management_system.data.constants.Role;
 import africa.semicolon.election_management_system.data.models.Admin;
@@ -7,6 +7,7 @@ import africa.semicolon.election_management_system.data.models.Voter;
 import africa.semicolon.election_management_system.data.repositories.AdminRepository;
 import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.data.repositories.VoterRepository;
+import africa.semicolon.election_management_system.security.models.UserDetailsImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

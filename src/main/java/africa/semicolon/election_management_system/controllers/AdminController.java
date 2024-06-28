@@ -11,8 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -23,7 +21,6 @@ public class AdminController {
 
     private final AdminService adminService;
 
-
     @PostMapping("/register")
     public ResponseEntity<?> registerAdmin(@RequestBody RegisterAdminRequest registerAdminRequest) {
         var result = adminService.register(registerAdminRequest);
@@ -32,22 +29,17 @@ public class AdminController {
     }
 
     @PostMapping("/schedule-election")
-    public ResponseEntity<?> scheduleElection(@RequestBody ScheduleElectionRequest scheduleElectionRequest,
-                                              Principal principal) {
-        adminService.validateAdmin(principal.getName());
+    public ResponseEntity<?> scheduleElection(@RequestBody ScheduleElectionRequest scheduleElectionRequest) {
         var result = adminService.scheduleElection(scheduleElectionRequest);
         ApiResponse response = getApiResponse(result);
         return ResponseEntity.status(CREATED).body(response);
     }
 
     @PatchMapping("/update-as-admin/{votingId}")
-    public ResponseEntity<?> updateVotersDetail(@PathVariable Long votingId, @RequestBody JsonPatch jsonPatch,
-                                                Principal principal) {
-        adminService.validateAdmin(principal.getName());
+    public ResponseEntity<?> updateVotersDetail(@PathVariable Long votingId, @RequestBody JsonPatch jsonPatch) {
         UpdateVoterResponse result = adminService.updateVoterAsAdmin(votingId, jsonPatch);
         ApiResponse response = getApiResponse(result);
         return ResponseEntity.ok(response);
-
     }
 
     private static ApiResponse getApiResponse(Object data) {
