@@ -76,7 +76,7 @@ public class VoterControllerTest {
                         .contentType("application/json-patch+json")
                         .content(jsonPatch))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.data..address").value("4 Afolabi street"))
+                .andExpect(jsonPath("$.data.address").value("4 Afolabi street"))
                 .andDo(print());
 
 
