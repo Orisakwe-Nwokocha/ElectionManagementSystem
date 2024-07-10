@@ -20,5 +20,4 @@ public class RegisterCandidateRequest {
     private String partyAffiliation;
     private Category positionContested;
     private Long electionId;
-    private Long votingId;
 }

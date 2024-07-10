@@ -9,7 +9,10 @@ import africa.semicolon.election_management_system.services.AdminService;
 import com.github.fge.jsonpatch.JsonPatch;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -29,7 +32,13 @@ public class AdminController {
     }
 
     @PostMapping("/schedule-election")
-    public ResponseEntity<?> scheduleElection(@RequestBody ScheduleElectionRequest scheduleElectionRequest) {
+    public ResponseEntity<?> scheduleElection(@RequestBody ScheduleElectionRequest scheduleElectionRequest,
+                                              Authentication authentication, Principal principal) {
+        System.out.println("reached here: " + authentication.getAuthorities());
+        System.out.println("name auth: " + authentication.getName());
+        System.out.println("principal auth: " + authentication.getPrincipal());
+        System.out.println("credentials: " + authentication.getCredentials());
+        System.out.println("principal: " + principal.getName());
         var result = adminService.scheduleElection(scheduleElectionRequest);
         ApiResponse response = getApiResponse(result);
         return ResponseEntity.status(CREATED).body(response);
