@@ -2,6 +2,7 @@ package africa.semicolon.election_management_system.services;
 
 import africa.semicolon.election_management_system.data.models.Candidate;
 import africa.semicolon.election_management_system.data.models.Election;
+import africa.semicolon.election_management_system.data.models.Voter;
 import africa.semicolon.election_management_system.data.repositories.CandidateRepository;
 import africa.semicolon.election_management_system.dtos.requests.CreateVoterRequest;
 import africa.semicolon.election_management_system.dtos.requests.DeleteCandidateRequest;
@@ -15,6 +16,8 @@ import africa.semicolon.election_management_system.exceptions.CandidateNotFoundE
 import africa.semicolon.election_management_system.exceptions.ElectionNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ResourceNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +29,7 @@ import java.util.List;
 @Service
 public class CandidateServiceImpl implements CandidateService {
 
+    private static final Logger log = LoggerFactory.getLogger(CandidateServiceImpl.class);
     private final CandidateRepository candidateRepository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
@@ -88,6 +92,11 @@ public class CandidateServiceImpl implements CandidateService {
     }
 
     private CreateVoterResponse registerVoter(RegisterCandidateRequest request) {
+        Voter voter = voterService.getVoterByIdentificationNumber(request.getIdentificationNumber());
+        if (voter != null) {
+            log.info("User already registered as voter, with voting id: {}", voter.getVotingId());
+            return modelMapper.map(voter, CreateVoterResponse.class);
+        }
         CreateVoterRequest createVoterRequest = modelMapper.map(request, CreateVoterRequest.class);
         return voterService.registerVoter(createVoterRequest);
     }

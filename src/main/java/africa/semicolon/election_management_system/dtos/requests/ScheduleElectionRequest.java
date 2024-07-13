@@ -16,6 +16,7 @@ public class ScheduleElectionRequest {
     private Category category;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startDate;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 

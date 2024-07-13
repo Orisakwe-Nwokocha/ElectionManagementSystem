@@ -23,9 +23,9 @@ import java.util.List;
 @Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private AdminRepository adminRepository;
-    private CandidateRepository candidateRepository;
-    private VoterRepository voterRepository;
+    private final AdminRepository adminRepository;
+    private final CandidateRepository candidateRepository;
+    private final VoterRepository voterRepository;
 
     @Override
     @Transactional

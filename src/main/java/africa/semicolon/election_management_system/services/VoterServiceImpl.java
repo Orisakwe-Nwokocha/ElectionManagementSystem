@@ -126,6 +126,12 @@ public class VoterServiceImpl implements VoterService{
         return response;
     }
 
+    @Override
+    public Voter getVoterByIdentificationNumber(String identificationNumber) {
+        return voterRepository.findByIdentificationNumber(identificationNumber)
+                .orElse(null);
+    }
+
     private void validate(Election election, Candidate candidate, Voter voter) {
         validate(election, candidate);
         validate(voter, election);

@@ -44,7 +44,7 @@ public class TestUtils {
         RegisterCandidateRequest request = new RegisterCandidateRequest();
         request.setName("John");
         request.setAddress("no 29 adewale str");
-        request.setIdentificationNumber("12343487443");
+        request.setIdentificationNumber("123459");
         request.setPassword("password");
         request.setDateOfBirth(LocalDate.of(1980, 10, 2));
         request.setPartyAffiliation("P.D.P");
