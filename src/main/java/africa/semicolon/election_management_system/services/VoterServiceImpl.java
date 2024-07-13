@@ -132,8 +132,12 @@ public class VoterServiceImpl implements VoterService{
     }
 
     private void validate(Voter voter, Election election) {
-        var votes = voteRepository.findVotesByVoterAndElection(voter.getId(), election.getId());
-        if (!votes.isEmpty()) throw new InvalidVoteException("Vote has already been casted");
+        boolean hasVoted = voteRepository.existsByVoterAndElection(voter.getId(), election.getId());
+        log.info("Has user voted: {}", hasVoted);
+        if (hasVoted) {
+            log.warn("User voted already with voting id: {}", voter.getVotingId());
+            throw new InvalidVoteException("Vote has already been casted");
+        }
     }
 
     private void validate(Election election, Candidate candidate) {
@@ -158,10 +162,9 @@ public class VoterServiceImpl implements VoterService{
     }
 
     private void validateIdentificationNumber(String identificationNumber) {
-        boolean condition = voterRepository.existsByIdentificationNumber(identificationNumber);
-        if (condition) {
+        boolean isUniqueIdentifierExists = voterRepository.existsByIdentificationNumber(identificationNumber);
+        if (isUniqueIdentifierExists)
             throw new IdentificationNumberAlreadyExistsException("Identification number already exists.");
-        }
     }
 
     private static Vote buildVote(Voter voter, Candidate candidate, Election election) {

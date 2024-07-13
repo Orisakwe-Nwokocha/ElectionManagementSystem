@@ -15,7 +15,6 @@ public class CandidateResultResponse {
     @JsonProperty("candidate_name")
     private String name;
     private String partyAffiliation;
-    @JsonProperty("position_contested")
     private String positionContested;
     private int numberOfVotes;
 }
