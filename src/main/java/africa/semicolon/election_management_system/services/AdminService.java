@@ -18,5 +18,4 @@ public interface AdminService {
     UpdateCandidateResponse updateCandidate(UpdateCandidateRequest updateCandidateRequest);
     Admin getAdminBy(Long id);
     UpdateVoterResponse updateVoterAsAdmin(Long votingId, JsonPatch jsonPatch);
-    void validateAdmin(String username);
 }

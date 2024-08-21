@@ -10,7 +10,6 @@ import africa.semicolon.election_management_system.dtos.requests.*;
 import africa.semicolon.election_management_system.dtos.responses.*;
 import africa.semicolon.election_management_system.exceptions.AdminNotFoundException;
 import africa.semicolon.election_management_system.exceptions.ElectionManagementSystemBaseException;
-import africa.semicolon.election_management_system.exceptions.UnauthorizedException;
 import africa.semicolon.election_management_system.exceptions.UsernameExistsException;
 import com.github.fge.jsonpatch.JsonPatch;
 import lombok.extern.slf4j.Slf4j;
@@ -110,12 +109,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public UpdateVoterResponse updateVoterAsAdmin(Long votingId, JsonPatch jsonPatch) {
         return voterService.updateVoter(votingId, jsonPatch);
-    }
-
-    @Override
-    public void validateAdmin(String username) {
-        boolean usernameExists = adminRepository.existsByUsername(username.toLowerCase());
-        if (!usernameExists) throw new UnauthorizedException("You are not authorized to perform this operation");
     }
 
     private void validate(String username) {

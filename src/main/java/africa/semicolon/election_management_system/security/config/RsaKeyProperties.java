@@ -1,4 +1,4 @@
-package africa.semicolon.election_management_system.config;
+package africa.semicolon.election_management_system.security.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

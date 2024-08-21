@@ -14,6 +14,7 @@ public interface VoterService {
     Voter getVoterByVotingId(Long votingId);
     UpdateVoterResponse updateVoter(Long votingId, JsonPatch jsonPatch);
     CastVoteResponse castVote(CastVoteRequest castVoteRequest);
+    Voter getVoterByIdentificationNumber(String identificationNumber);
 
 }
 

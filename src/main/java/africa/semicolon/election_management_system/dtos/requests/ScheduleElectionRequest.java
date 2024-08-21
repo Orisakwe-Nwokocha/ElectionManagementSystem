@@ -1,6 +1,7 @@
 package africa.semicolon.election_management_system.dtos.requests;
 
 import africa.semicolon.election_management_system.data.constants.Category;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class ScheduleElectionRequest {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startDate;
     @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endDate;
 
 }

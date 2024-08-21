@@ -1,4 +1,4 @@
-package africa.semicolon.election_management_system.security;
+package africa.semicolon.election_management_system.security.models;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
