@@ -50,5 +50,6 @@ accessibility of the election process for all stakeholders.
 The application provides several RESTful APIs to achieve the aforementioned process. Here are some examples:
 
 # API Documentation
-Detailed API documentation is available on Postman. You can access it here: 
-https://documenter.getpostman.com/view/33764605/2sA3XQi32W 
+Detailed API documentation is available  on Postman. You can access it here: 
+https://documenter.getpostman.com/view/33764605/2sA3XQi32W
+https://documenter.getpostman.com/view/33708724/2sA3XWdK39
